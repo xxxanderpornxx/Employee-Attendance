@@ -1,0 +1,86 @@
+/* Reset and base styles */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: "Arial", sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Navbar styles */
+header {
+    display: flex;
+    align-items: center;
+    background-color: #34abc7; /* Navbar background color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    padding: 0 20px; /* Add padding for spacing */
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    margin-left: auto; /* Push the links to the right */
+}
+
+li {
+    position: relative;
+    margin: 0;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+}
+
+li a:hover {
+    background-color: #2a94a3; /* Hover color */
+    color: #e0f7fa; /* Slightly lighter text on hover */
+}
+
+.current {
+    background-color: #247a85; /* Active link color */
+    color: #ffffff;
+    border-bottom: 3px solid #e0f7fa; /* Highlight the active link */
+}
+
+/* Add a subtle separator between links */
+li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.5); /* Subtle separator */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column; /* Stack logo and links vertically on smaller screens */
+    }
+
+    ul {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+        margin-left: 0; /* Reset margin for smaller screens */
+    }
+
+    li a {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    li:not(:last-child)::after {
+        display: none; /* Remove separators on smaller screens */
+    }
+}
