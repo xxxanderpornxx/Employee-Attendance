@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\empuser;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\ShiftsController;
 
 // Route to show the login form
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
@@ -41,29 +43,45 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 // Route to handle the registration submission
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
-// Route to show the employee
+
 
 // Dashboard route
 Route::get('/dashboard', function () {
-    return view('main.dashboard'); // Replace with your actual dashboard view
+    return view('main.dashboard');
 })->name('dashboard');
 
 // Attendance route
 Route::get('/attendance', function () {
-    return view('main.attendance'); // Replace with your actual attendance view
+    return view('main.attendance');
 })->name('attendance');
 
 // Employee route
 Route::get('/employee', function () {
-    return view('main.employee'); // Replace with your actual employee view
+    return view('main.employee');
 })->name('employee');
 
 // Shifts route
 Route::get('/shift', function () {
-    return view('main.shift'); // Replace with your actual shift view
+    return view('main.shift');
 })->name('shift');
+
+Route::get('/shift', [ShiftsController::class, 'index'])->name('shifts.index');
+Route::post('/shift', [ShiftsController::class, 'store'])->name('shifts.store');
+Route::delete('/shift/{id}', [ShiftsController::class, 'destroy'])->name('shifts.destroy');
+Route::put('/shift/{id}', [ShiftsController::class, 'update'])->name('shifts.update');
+Route::get('/shift/{id}/edit', [ShiftsController::class, 'edit'])->name('shifts.edit');
 
 // Payroll route
 Route::get('/payroll', function () {
-    return view('main.payroll'); // Replace with your actual payroll view
+    return view('main.payroll');
 })->name('payroll');
+
+//position route
+Route::get('/positions', function () {
+    return view('main.position');
+})->name('position');
+Route::get('/positions', [PositionController::class, 'index'])->name('positions.index');
+Route::get('/positions', [PositionController::class, 'index'])->name('positions.index');
+Route::post('/positions', [PositionController::class, 'store'])->name('positions.store');
+Route::put('/positions/{id}', [PositionController::class, 'update'])->name('positions.update');
+Route::delete('/positions/{id}', [PositionController::class, 'destroy'])->name('positions.destroy');

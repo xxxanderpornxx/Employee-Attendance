@@ -44,15 +44,4 @@ class LoginController extends Controller
         return redirect('/login')->withErrors(['email' => 'Invalid email or password.']);
     }
 
-    /**
-     * Handle logout.
-     */
-    public function logout()
-    {
-        // Clear the session
-        session()->forget('us   er');
-
-        // Redirect to the login page
-        return redirect('/login')->with('success', 'You have been logged out.');
-    }
 }

@@ -1,13 +1,12 @@
 <x-loginlayout>
     <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
+
+
     <div class="container">
         <form method="POST" action="{{ route('register') }}">
             @csrf
-            {{-- <div>
-                <label for="employee_id">Employee ID:</label>
-                <input type="text" id="employee_id" name="employee_id" required>
-            </div> --}}
+
             <div>
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>

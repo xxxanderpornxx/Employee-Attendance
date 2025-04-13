@@ -9,17 +9,39 @@
 </head>
 <body>
 <header>
+    <div class="logo">
+        <img src="{{ asset('images/logo.jpg') }}" alt="Company Logo" class="logo-img">
+    </div>
+    <div>
+        <h1>
+            Employee Attendance System
+        </h1>
+    </div>
     <ul>
-    <li><a href="/dashboard">Dashboard</a></li>
-    <li><a href="/attendance">Attendance</a></li>
-    <li><a href="/employee">Employee</a></li>
-    <li><a href="/shift">Shifts</a></li>
-    <li><a href="/payroll">Payroll</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/attendance">Attendance</a></li>
+        <li><a href="/employee">Employee</a></li>
+        <li><a href="/positions">Position</a></li>
+        <li><a href="/shift">Shifts</a></li>
+        <li><a href="/payroll">Payroll</a></li>
     </ul>
 </header>
-<main class="container">
-    {{ $slot }}
-</main>
+
+<div class="main-layout">
+
+    <aside class="left-column">
+        <div class="user-info">
+            <p>Logged in as:</p>
+            <p><strong>John Doe</strong></p>
+            <button class="logout-button">Log Out</button>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+        {{ $slot }}
+    </main>
+</div>
 </body>
 </html>
 
