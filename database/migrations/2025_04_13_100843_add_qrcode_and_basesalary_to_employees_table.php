@@ -9,6 +9,9 @@ return new class extends Migration {
         Schema::table('employees', function (Blueprint $table) {
             $table->string('QRcode')->nullable()->after('HireDate');
             $table->decimal('BaseSalary', 10, 2)->default(0)->after('QRcode');
+            $table->string('Email') ->nullable()->after('BaseSalary');
+            $table->date('DateOfBirth')->nullable()->after('Sex');
+            $table->string('Address')->nullable()->after('ContactNumber');
         });
     }
 

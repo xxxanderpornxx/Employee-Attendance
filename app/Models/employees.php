@@ -6,12 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class employees extends Model
 {
-    /**
-     * Define the relationship with the Position model.
-     */
+    protected $fillable = [
+        'FirstName',
+        'MiddleName',
+        'LastName',
+        'Sex',
+        'DateOfBirth',
+        'PositionID',
+        'DepartmentID',
+        'ContactNumber',
+        'Address',
+        'HireDate',
+        'QRCode',
+        'BaseSalary',
+        'Email',
+    ];
+
+
     public function position()
     {
-        return $this->belongsTo(emppositions::class, 'PositionID');
+        return $this->belongsTo(EmpPosition::class, 'PositionID');
     }
 
     /**
@@ -19,7 +33,7 @@ class employees extends Model
      */
     public function department()
     {
-        return $this->belongsTo(departments::class, 'DepartmentID');
+        return $this->belongsTo(Department::class, 'DepartmentID');
     }
 
     /**

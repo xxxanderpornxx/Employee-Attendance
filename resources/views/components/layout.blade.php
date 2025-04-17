@@ -17,11 +17,11 @@
             Employee Attendance System
         </h1>
     </div>
-    <ul>
+    <ul class="navlinks">
         <li><a href="/dashboard">Dashboard</a></li>
         <li><a href="/attendance">Attendance</a></li>
         <li><a href="/employee">Employee</a></li>
-        <li><a href="/positions">Position</a></li>
+        <li><a href="/positions">Roles</a></li>
         <li><a href="/shift">Shifts</a></li>
         <li><a href="/payroll">Payroll</a></li>
     </ul>

@@ -1,0 +1,15 @@
+.addemployeebutton {
+    background-color: #34abc7; /* Set the button color */
+    color: white; /* Set the text color */
+    border: none; /* Remove the border */
+    border-radius: 4px; /* Add rounded corners */
+    padding: 10px 20px; /* Adjust padding for better appearance */
+    font-size: 16px; /* Adjust font size */
+    font-weight: bold; /* Make the text bold */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+.addemployeebutton:hover {
+    background-color: #2a94a3;
+    color: #e0f7fa;
+}

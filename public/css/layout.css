@@ -10,11 +10,12 @@ html {
 
 /* Navbar styles */
 header {
-    display: flex; /* Use flexbox to align items horizontally */
-    align-items: center; /* Vertically align items */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically center all child elements, including the <ul> */
+    justify-content: space-between; /* Space between logo/title and links */
+    padding: 0 20px; /* Add padding for spacing */
     background-color: #34abc7; /* Navbar background color */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-    padding: 0 20px; /* Add padding for spacing */
 }
 
 /* Logo styling */
@@ -30,11 +31,11 @@ header {
 
 /* Navbar links */
 ul {
+    display: flex; /* Align links horizontally */
+    align-items: center; /* Vertically center the links */
     list-style-type: none;
     margin: 0;
     padding: 0;
-    display: flex; /* Align links horizontally */
-    justify-content: flex-start; /* Align items to the left */
     margin-left: auto; /* Push the links to the right */
 }
 
@@ -94,7 +95,7 @@ li:not(:last-child)::after {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start; /* Align items to the top initially */
-    height: 88.5vh; /* Set height to full viewport height */
+    height: 88vh; /* Set height to full viewport height */
     overflow-y: hidden; /* Add scrolling if content overflows */
 }
 
@@ -126,6 +127,10 @@ li:not(:last-child)::after {
     overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
+.navlinks {
+    display: flex;
+    margin-top: 20px; /* Add spacing from the top */
+}
 /* Responsive design */
 @media (max-width: 768px) {
     header {

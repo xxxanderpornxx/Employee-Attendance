@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class emppositions extends Model
+class EmpPosition extends Model
 {
+    protected $table = 'emppositions'; // Explicitly define the table name
     protected $fillable = [
         'PositionName',
     ];

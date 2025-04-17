@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\shifts;
 use Illuminate\Http\Request;
 
-class ShiftsController extends Controller
+class ShiftController extends Controller
 {
     /**
      * Display a listing of the resource.

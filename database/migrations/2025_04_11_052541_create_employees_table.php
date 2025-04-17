@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('MiddleName')->nullable(); // Middle Name (optional)
             $table->string('LastName'); // Last Name
             $table->enum('Sex', ['Male', 'Female']); // Sex (Male or Female)
-            $table->integer('Age'); // Age
             $table->unsignedBigInteger('PositionID'); // Foreign key for Position
             $table->unsignedBigInteger('DepartmentID'); // Foreign key for Department
             $table->string('ContactNumber'); // Contact Number

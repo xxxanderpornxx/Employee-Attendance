@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\empuser;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PositionController;
-use App\Http\Controllers\ShiftsController;
+use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\EmployeeController;
 
 // Route to show the login form
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
@@ -59,29 +61,41 @@ Route::get('/attendance', function () {
 Route::get('/employee', function () {
     return view('main.employee');
 })->name('employee');
+Route::get('/employee', [EmployeeController::class, 'index'])->name('employees.index');
+Route::post('/employee', [EmployeeController::class, 'store'])->name('employees.store');
+Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+Route::put('/employee/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+Route::get('/employee/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('employees.show');
+Route::get('/employee/create', [EmployeeController::class, 'create'])->name('employees.create');
+Route::post('/employee/store', [EmployeeController::class, 'store'])->name('employees.store');
+Route::get('/employee/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('employees.show');
 
 // Shifts route
 Route::get('/shift', function () {
     return view('main.shift');
 })->name('shift');
-
-Route::get('/shift', [ShiftsController::class, 'index'])->name('shifts.index');
-Route::post('/shift', [ShiftsController::class, 'store'])->name('shifts.store');
-Route::delete('/shift/{id}', [ShiftsController::class, 'destroy'])->name('shifts.destroy');
-Route::put('/shift/{id}', [ShiftsController::class, 'update'])->name('shifts.update');
-Route::get('/shift/{id}/edit', [ShiftsController::class, 'edit'])->name('shifts.edit');
+Route::get('/shift', [ShiftController::class, 'index'])->name('shifts.index');
+Route::post('/shift', [ShiftController::class, 'store'])->name('shifts.store');
+Route::delete('/shift/{id}', [ShiftController::class, 'destroy'])->name('shifts.destroy');
+Route::put('/shift/{id}', [ShiftController::class, 'update'])->name('shifts.update');
+Route::get('/shift/{id}/edit', [ShiftController::class, 'edit'])->name('shifts.edit');
 
 // Payroll route
 Route::get('/payroll', function () {
     return view('main.payroll');
 })->name('payroll');
 
-//position route
-Route::get('/positions', function () {
-    return view('main.position');
-})->name('position');
-Route::get('/positions', [PositionController::class, 'index'])->name('positions.index');
-Route::get('/positions', [PositionController::class, 'index'])->name('positions.index');
-Route::post('/positions', [PositionController::class, 'store'])->name('positions.store');
-Route::put('/positions/{id}', [PositionController::class, 'update'])->name('positions.update');
-Route::delete('/positions/{id}', [PositionController::class, 'destroy'])->name('positions.destroy');
+// Department Routes
+Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+Route::get('/positions', [DepartmentController::class, 'index'])->name('positions.index'); // Add this line
+Route::post('/departments', [DepartmentController::class, 'storeDepartment'])->name('departments.store');
+Route::put('/departments/{id}', [DepartmentController::class, 'updateDepartment'])->name('departments.update');
+Route::delete('/departments/{id}', [DepartmentController::class, 'destroyDepartment'])->name('departments.destroy');
+
+// Position Routes
+Route::post('/positions', [DepartmentController::class, 'storePosition'])->name('positions.store');
+Route::put('/positions/{id}', [DepartmentController::class, 'updatePosition'])->name('positions.update');
+Route::delete('/positions/{id}', [DepartmentController::class, 'destroyPosition'])->name('positions.destroy');
