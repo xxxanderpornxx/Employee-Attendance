@@ -58,20 +58,16 @@ Route::get('/attendance', function () {
 })->name('attendance');
 
 // Employee route
-Route::get('/employee', function () {
-    return view('main.employee');
-})->name('employee');
-Route::get('/employee', [EmployeeController::class, 'index'])->name('employees.index');
-Route::post('/employee', [EmployeeController::class, 'store'])->name('employees.store');
-Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-Route::put('/employee/{id}', [EmployeeController::class, 'update'])->name('employees.update');
-Route::get('/employee/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
-Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('employees.show');
-Route::get('/employee/create', [EmployeeController::class, 'create'])->name('employees.create');
-Route::post('/employee/store', [EmployeeController::class, 'store'])->name('employees.store');
-Route::get('/employee/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
-Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('employees.show');
+Route::get('/employee', [EmployeeController::class, 'index'])->name('Employees.index');
+Route::post('/employee', [EmployeeController::class, 'store'])->name('Employees.store');
+Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('Employees.destroy');
+Route::put('/employee/{id}', [EmployeeController::class, 'update'])->name('Employees.update');
+Route::get('/employee/{id}/edit', [EmployeeController::class, 'edit'])->name('Employees.edit');
+Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('Employees.show');
+Route::get('/employee/create', [EmployeeController::class, 'create'])->name('Employees.create');
+Route::post('/employee/store', [EmployeeController::class, 'store'])->name('Employees.store');
+Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('Employees.destroy');
+Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('Employees.show');
 
 // Shifts route
 Route::get('/shift', function () {

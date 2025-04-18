@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id(); // Employee ID (Primary Key)
-            $table->string('FirstName'); // First Name
-            $table->string('MiddleName')->nullable(); // Middle Name (optional)
-            $table->string('LastName'); // Last Name
-            $table->enum('Sex', ['Male', 'Female']); // Sex (Male or Female)
-            $table->unsignedBigInteger('PositionID'); // Foreign key for Position
-            $table->unsignedBigInteger('DepartmentID'); // Foreign key for Department
-            $table->string('ContactNumber'); // Contact Number
-            $table->date('HireDate'); // Hire Date
-            $table->timestamps(); // Created at and updated at timestamps
+            $table->string('FirstName');
+            $table->string('MiddleName')->nullable();
+            $table->string('LastName');
+            $table->enum('Sex', ['Male', 'Female']);
+            $table->unsignedBigInteger('PositionID');
+            $table->unsignedBigInteger('DepartmentID');
+            $table->string('ContactNumber');
+            $table->date('HireDate');
+            $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('PositionID')->references('id')->on('emppositions')->onDelete('cascade');

@@ -18,7 +18,7 @@ return new class extends Migration {
     public function down()
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->dropColumn(['QRcode', 'BaseSalary']);
+            $table->dropColumn(['QRcode', 'BaseSalary', 'Email', 'DateOfBirth', 'Address']);
         });
     }
 };

@@ -4,22 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class employees extends Model
-{
+class Employees extends Model
+{   protected $table = 'employees';
     protected $fillable = [
-        'FirstName',
-        'MiddleName',
-        'LastName',
-        'Sex',
-        'DateOfBirth',
-        'PositionID',
-        'DepartmentID',
-        'ContactNumber',
-        'Address',
-        'HireDate',
-        'QRCode',
-        'BaseSalary',
-        'Email',
+    'FirstName',
+    'MiddleName',
+    'LastName',
+    'Sex',
+    'DateOfBirth',
+    'PositionID',
+    'DepartmentID',
+    'ContactNumber',
+    'Address',
+    'HireDate',
+    'QRcode',
+    'BaseSalary',
+    'Email',
     ];
 
 
@@ -28,9 +28,7 @@ class employees extends Model
         return $this->belongsTo(EmpPosition::class, 'PositionID');
     }
 
-    /**
-     * Define the relationship with the Department model.
-     */
+
     public function department()
     {
         return $this->belongsTo(Department::class, 'DepartmentID');

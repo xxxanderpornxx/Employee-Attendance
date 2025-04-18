@@ -10,9 +10,9 @@ class Department extends Model
     protected $fillable = [
         'DepartmentName',
     ];
-    public function employees()
+    public function employee()
 {
-    return $this->hasMany(employees::class, 'DepartmentID');
+    return $this->hasMany(Employees::class, 'DepartmentID');
 }
 
 }

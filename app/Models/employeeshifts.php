@@ -8,7 +8,7 @@ class employeeshifts extends Model
 {
     public function employee()
     {
-        return $this->belongsTo(employees::class, 'EmployeeID');
+        return $this->belongsTo(Employees::class, 'EmployeeID');
     }
 
     public function shift()
