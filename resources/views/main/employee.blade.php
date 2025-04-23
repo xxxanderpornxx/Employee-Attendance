@@ -1,5 +1,5 @@
 <x-layout>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/employee.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
@@ -13,15 +13,9 @@
                 </button>
             </div>
         </div>
-
         <!-- Container for Search, Sort, and Data Table -->
         <div class="card">
             <div class="card-body">
-                <!-- Search and Sort Bar -->
-
-
-
-
                 <!-- Data Table -->
                 <div class="table-responsive">
                     <table id="employeeTable" class="table table-striped table-bordered">
@@ -32,8 +26,8 @@
                             <col style="width: 12%;">
                             <col style="width: 5%;">
                             <col style="width: 5%;">
+                            <col style="width: 10%;">
                             <col style="width: 15%;">
-                            <col style="width: 20%;">
                         </colgroup>
                         <thead>
                             <tr class="table-primary">
@@ -68,7 +62,7 @@
                                     <td class="text-center">
                                         <!-- Edit Button -->
                                         <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEmployeeModal-{{ $employee->id }}">
-                                            <i class="bi bi-pencil-square"></i> Edit
+                                            <i class="bi bi-pencil-square"></i>
                                         </button>
 
                                         <!-- Delete Button -->
@@ -76,18 +70,18 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?');">
-                                                <i class="bi bi-trash"></i> Delete
+                                                <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
 
                                         <!-- View Button -->
                                         <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewEmployeeModal-{{ $employee->id }}">
-                                            <i class="bi bi-eye"></i> View
+                                            <i class="bi bi-eye"></i>
                                         </button>
 
                                         <!-- Assign Shift Button -->
-                                        <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#assignShiftModal-{{ $employee->id }}">
-                                            <i class="bi bi-calendar-check"></i> Assign Shift
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignShiftModal-{{ $employee->id }}">
+                                            <i class="bi bi-calendar-check"></i>
                                         </button>
 
 
@@ -467,7 +461,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
@@ -481,6 +475,7 @@
                 "lengthChange": true,
                 "pageLength": 10,
             });
+
         });
     </script>
 </x-layout>

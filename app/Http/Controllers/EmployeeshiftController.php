@@ -10,8 +10,8 @@ class EmployeeshiftController extends Controller
     {
         $validated = $request->validate([
             'EmployeeID' => 'required|exists:employees,id',
-            'ShiftIDs' => 'required|array|min:2|max:2', // Ensure exactly 2 shifts are selected
-            'ShiftIDs.*' => 'required|exists:shifts,id', // Validate each shift ID
+            'ShiftIDs' => 'required|array|min:2|max:2',
+            'ShiftIDs.*' => 'required|exists:shifts,id',
         ]);
 
         // Remove any existing shifts for the employee on the given date

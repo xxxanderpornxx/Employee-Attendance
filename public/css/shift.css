@@ -1,0 +1,28 @@
+.table-responsive {
+    max-height: 400px; /* Set the desired height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Optional: Ensure the table headers stay visible */
+.table-responsive thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa; /* Match the table header background color */
+    z-index: 2;
+}
+
+.addshiftbutton {
+    background-color: #34abc7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.addshiftbutton:hover {
+    background-color: #2a94a3;
+    color: #e0f7fa;
+}
