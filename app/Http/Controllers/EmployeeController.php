@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Employees;
 use App\Models\EmpPosition;
+use App\Models\shifts;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 use Illuminate\Http\Request;
 
@@ -16,12 +19,14 @@ class EmployeeController extends Controller
     public function index()
     {
         // Fetch employees and positions
-        $employees = Employees::with(['position', 'department'])->get();
+        $employees = Employees::with(['shifts', 'position', 'department'])->get();
         $positions = EmpPosition::all();
         $departments = Department::all();
+        $shifts = shifts::all();
+
 
         // Pass the data to the view
-        return view('main.employee', compact('employees', 'positions', 'departments'));
+        return view('main.employee', compact('employees', 'positions', 'departments', 'shifts'));
     }
 
     /**
@@ -33,6 +38,7 @@ class EmployeeController extends Controller
         return view('main.employee', [
             'emppositions' => EmpPosition::all(),
             'departments' => Department::all(),
+            'shifts' => shifts::all(),
         ]);
     }
 
@@ -60,9 +66,20 @@ class EmployeeController extends Controller
         // Create a new employee instance and save it
         $employee = new Employees();
         $employee->fill($validated);
-        $employee->save(); // Save the employee to the database
+        $employee->save(); // Save the employee to the database to get the
 
-        return redirect()->route('Employees.index')->with('success', 'Employee created successfully.');
+        // Generate a QR code for the employee
+        $qrcodeString = $employee->FirstName . ' ' . $employee->LastName . ' - ' . $employee->PositionID;
+        $qrcode = QrCode::format('png')->size(200)->generate($qrcodeString);
+
+        // Save the QR code as a file
+        $filename = 'qrcodes/employee_' . $employee->id . '.png';
+        Storage::disk('public')->put($filename, $qrcode);
+
+        // Update the employee record with the QR code path
+        $employee->QRcode = $filename;
+        $employee->save();
+        return redirect()->route('Employees.index')->with('success', 'Employee created successfully with QR code!');
     }
 
     /**
@@ -131,4 +148,26 @@ class EmployeeController extends Controller
         // Redirect back with a success message
         return redirect()->route('Employees.index')->with('success', 'Employee deleted successfully.');
     }
+
+    public function generateQrCode(Request $request)
+{
+    // Validate the request
+    $validated = $request->validate([
+        'employeeId' => 'required|string|max:255', // Ensure employeeId is passed
+    ]);
+
+    // Generate a random string for the QR code
+    $randomString = bin2hex(random_bytes(8)); // Generate a random 16-character string
+
+    // Generate the QR code
+    $qrcode = QrCode::format('png')->size(200)->generate($randomString);
+
+    // Save the QR code as a file
+    $filename = 'qrcodes/' . uniqid() . '.png';
+    Storage::disk('public')->put($filename, $qrcode);
+
+    // Return the QR code path as a JSON response
+    return response()->json(['qrCodePath' => asset('storage/' . $filename)]);
+}
+
 }

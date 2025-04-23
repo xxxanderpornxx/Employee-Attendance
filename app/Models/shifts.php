@@ -13,9 +13,13 @@ class shifts extends Model
         'EndTime',
     ];
 
-    public function employeeShifts()
+    public function employeeshifts()
 
     {
-        return $this->hasMany(employeeShifts::class, 'ShiftID');
+        return $this->hasMany(employeeshifts::class, 'ShiftID');
+    }
+    public function employees()
+    {
+        return $this->belongsToMany(Shifts::class, 'employeeshifts', 'ShiftID', 'EmployeeID');
     }
 }

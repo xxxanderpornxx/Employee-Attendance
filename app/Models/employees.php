@@ -77,8 +77,12 @@ class Employees extends Model
     /**
      * Define the relationship with the EmployeeShift model.
      */
-    public function employeeShift()
+    public function Employeeshift()
     {
-        return $this->hasOne(employeeshifts::class, 'EmployeeID');
+        return $this->hasOne(Employeeshifts::class, 'EmployeeID');
+    }
+    public function shifts()
+    {
+        return $this->belongsToMany(Shifts::class, 'employeeshifts', 'EmployeeID', 'ShiftID');
     }
 }

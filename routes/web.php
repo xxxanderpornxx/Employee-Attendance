@@ -11,8 +11,11 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeshiftController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 // Route to show the login form
+
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
@@ -68,6 +71,8 @@ Route::get('/employee/create', [EmployeeController::class, 'create'])->name('Emp
 Route::post('/employee/store', [EmployeeController::class, 'store'])->name('Employees.store');
 Route::delete('/employee/{id}', [EmployeeController::class, 'destroy'])->name('Employees.destroy');
 Route::get('/employee/{id}', [EmployeeController::class, 'show'])->name('Employees.show');
+Route::post('/employees', [EmployeeController::class, 'store'])->name('Employees.store');
+Route::post('/employees/generate-qr', [EmployeeController::class, 'generateQrCode'])->name('employees.generateQrCode');
 
 // Shifts route
 Route::get('/shift', function () {
@@ -95,3 +100,6 @@ Route::delete('/departments/{id}', [DepartmentController::class, 'destroyDepartm
 Route::post('/positions', [DepartmentController::class, 'storePosition'])->name('positions.store');
 Route::put('/positions/{id}', [DepartmentController::class, 'updatePosition'])->name('positions.update');
 Route::delete('/positions/{id}', [DepartmentController::class, 'destroyPosition'])->name('positions.destroy');
+
+// assign shift route
+Route::post('/assign-shift', [EmployeeshiftController::class, 'assignShiftToEmployee'])->name('assignShift');

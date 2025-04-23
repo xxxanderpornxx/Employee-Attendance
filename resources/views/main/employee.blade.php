@@ -2,6 +2,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/employee.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 
     <div class="col-12">
         <div class="row p-3 pb-5">
@@ -17,30 +18,18 @@
         <div class="card">
             <div class="card-body">
                 <!-- Search and Sort Bar -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <!-- Search Bar -->
-                        <input type="text" class="form-control" id="searchBar" placeholder="Search employees...">
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <!-- Sort Dropdown -->
-                        <select class="form-select w-auto d-inline-block" id="sortBar">
-                            <option value="id_asc">Sort by ID (Ascending)</option>
-                            <option value="id_desc">Sort by ID (Descending)</option>
-                            <option value="name_asc">Sort by Name (A-Z)</option>
-                            <option value="name_desc">Sort by Name (Z-A)</option>
-                        </select>
-                    </div>
-                </div>
+
+
+
 
                 <!-- Data Table -->
-                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                    <table class="table table-striped table-bordered">
+                <div class="table-responsive">
+                    <table id="employeeTable" class="table table-striped table-bordered">
                         <colgroup>
                             <col style="width:3%;">
-                            <col style="width: 20%;">
-                            <col style="width: 30%;">
-                            <col style="width: 0%;">
+                            <col style="width: 13%;">
+                            <col style="width: 16%;">
+                            <col style="width: 12%;">
                             <col style="width: 5%;">
                             <col style="width: 5%;">
                             <col style="width: 15%;">
@@ -62,24 +51,90 @@
                             @foreach ($employees as $employee)
                                 <tr>
                                     <td>{{ $employee->id }}</td>
-                                    <td>{{ $employee->FirstName . ' ' . $employee->MiddleName . ' ' . $employee->LastName }}</td>
+                                    <td>{{ $employee->FirstName . ' ' . ($employee->MiddleName ? substr($employee->MiddleName, 0, 1) . '.' : '') . ' ' . $employee->LastName }}</td>
                                     <td>{{ $employee->position && $employee->department ? $employee->department->DepartmentName : 'N/A' }} | {{ $employee->position ? $employee->position->PositionName : 'N/A' }}</td>
-                                    <td>N/A</td>
+                                    <td>
+                                        @if ($employee->shifts && $employee->shifts->count() > 0)
+                                            @foreach ($employee->shifts as $shift)
+                                                <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->StartTime)->format('h:i A') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->EndTime)->format('h:i A') }}</div>
+                                            @endforeach {{-- End of foreach loop --}}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
                                     <td>{{ $employee->Sex ?? 'N/A' }}</td>
                                     <td>{{ $employee->DateOfBirth ? (int) \Carbon\Carbon::createFromFormat('Y-m-d', $employee->DateOfBirth)->diffInYears(now()) : 'N/A' }}</td>
                                     <td>{{ $employee->Address }}</td>
-                                    <td>
+                                    <td class="text-center">
                                         <!-- Edit Button -->
-                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEmployeeModal-{{ $employee->id }}">Edit</button>
+                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editEmployeeModal-{{ $employee->id }}">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </button>
 
                                         <!-- Delete Button -->
                                         <form method="POST" action="{{ route('Employees.destroy', $employee->id) }}" style="display: inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?');">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
                                         </form>
+
                                         <!-- View Button -->
-                                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewEmployeeModal-{{ $employee->id }}">View</button>
+                                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewEmployeeModal-{{ $employee->id }}">
+                                            <i class="bi bi-eye"></i> View
+                                        </button>
+
+                                        <!-- Assign Shift Button -->
+                                        <button class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#assignShiftModal-{{ $employee->id }}">
+                                            <i class="bi bi-calendar-check"></i> Assign Shift
+                                        </button>
+
+
+
+                                        <!-- Assign Shift Modal -->
+                                        <div class="modal fade" id="assignShiftModal-{{ $employee->id }}" tabindex="-1" aria-labelledby="assignShiftModalLabel-{{ $employee->id }}" aria-hidden="true" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="assignShiftModalLabel-{{ $employee->id }}">Assign Shifts to {{ $employee->FirstName }} {{ $employee->LastName }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="POST" action="{{ route('assignShift') }}">
+                                                            @csrf
+                                                            <input type="hidden" name="EmployeeID" value="{{ $employee->id }}">
+
+                                                            <div class="mb-3">
+                                                                <label for="ShiftID1-{{ $employee->id }}" class="form-label">Select First Shift</label>
+                                                                <select class="form-select" id="ShiftID1-{{ $employee->id }}" name="ShiftIDs[]" required>
+                                                                    <option value="" disabled selected>Select a shift</option>
+                                                                    @foreach ($shifts as $shift)
+                                                                        <option value="{{ $shift->id }}">
+                                                                            {{ $shift->StartTime }} - {{ $shift->EndTime }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label for="ShiftID2-{{ $employee->id }}" class="form-label">Select Second Shift</label>
+                                                                <select class="form-select" id="ShiftID2-{{ $employee->id }}" name="ShiftIDs[]" required>
+                                                                    <option value="" disabled selected>Select a shift</option>
+                                                                    @foreach ($shifts as $shift)
+                                                                        <option value="{{ $shift->id }}">
+                                                                            {{ $shift->StartTime }} - {{ $shift->EndTime }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
+                                                            <button type="submit" class="btn btn-success">Assign Shifts</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -176,11 +231,8 @@
                                                         </div>
                                                     </div>
 
-                                                    <!-- QR Code Section -->
-                                                    <div class="mb-3">
-                                                        <label for="QRcode-{{ $employee->id }}" class="form-label">QR Code</label>
-                                                        <input type="text" class="form-control" id="QRcode-{{ $employee->id }}" name="QRcode" value="{{ $employee->QRcode }}">
-                                                    </div>
+
+
 
                                                     <button type="submit" class="btn btn-primary">Save Changes</button>
                                                 </form>
@@ -259,9 +311,15 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="mb-3">
+                                                <div class="mb-3" style="text-align: center;">
                                                     <label class="form-label">QR Code</label>
-                                                    <input type="text" class="form-control" value="{{ $employee->QRcode }}" readonly>
+                                                    <div @class(['p-4', 'font-bold' => true])>
+                                                    @if ($employee->QRcode)
+                                                        <img id="qrCodeImage" src="{{ asset('storage/qrcodes/employee_' . $employee->id . '.png') }}" alt="QR Code" style="width: 150px; height: 150px;">
+                                                    @else
+                                                        <p>No QR Code available</p>
+                                                    @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -373,8 +431,35 @@
                         <!-- QR Code Section -->
                         <div class="mb-3">
                             <label for="QRcode" class="form-label">QR Code</label>
-                            <input type="text" class="form-control" id="QRcode" name="QRcode" placeholder="Enter QR Code" >
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="QRcode" name="QRcode" readonly>
+                                <button type="button" class="btn btn-secondary" onclick="generateQRCode()">Generate QR</button>
+                            </div>
+                            <img id="qrCodeImage" src="" alt="QR Code" style="width: 150px; height: 150px; display: none;">
                         </div>
+
+                        <script>
+                            function generateQRCode() {
+                                const employeeId = $('#FirstName').val() + ' ' + $('#LastName').val(); // Example: Use employee name
+                                $.ajax({
+                                    url: `/employees/generate-qr`, // Correct endpoint
+                                    method: 'POST',
+                                    data: {
+                                        _token: '{{ csrf_token() }}', // CSRF token for security
+                                        employeeId: employeeId // Pass employee data
+                                    },
+                                    success: function (response) {
+                                        $('#QRcode').val(response.qrCodePath); // Update the QR code path
+                                        $('#qrCodeImage').attr('src', response.qrCodePath).show(); // Show the QR code image
+                                        alert('QR Code generated successfully!');
+                                    },
+                                    error: function (xhr) {
+                                        console.error(xhr.responseText); // Log the error for debugging
+                                        alert('Failed to generate QR Code.');
+                                    }
+                                });
+                            }
+                        </script>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>
@@ -383,4 +468,19 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#employeeTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "lengthChange": true,
+                "pageLength": 10,
+            });
+        });
+    </script>
 </x-layout>

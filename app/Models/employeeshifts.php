@@ -4,15 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class employeeshifts extends Model
+class Employeeshifts extends Model
 {
-    public function employee()
+    protected $fillable = [
+        'EmployeeID',
+        'ShiftID',
+    ];
+    public function Employees()
     {
         return $this->belongsTo(Employees::class, 'EmployeeID');
     }
 
-    public function shift()
+    public function Shifts()
     {
-        return $this->belongsTo(shifts::class, 'ShiftID');
+        return $this->belongsTo(Shifts::class, 'ShiftID');
     }
 }

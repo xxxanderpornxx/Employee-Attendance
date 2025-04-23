@@ -3,12 +3,12 @@
         <link rel="stylesheet" href="{{ asset('css/position.css') }}">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     </head>
     <div class="col-12">
         <div class="position-page">
             <div class="row p-3 pb-5">
                 <div class="col-auto">
-
                 </div>
             </div>
 
@@ -25,22 +25,14 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" id="searchBar" placeholder="Search positions...">
-                                </div>
-                                <div class="col-md-6 text-end">
-                                    <select class="form-select w-auto d-inline-block" id="sortBar">
-                                        <option value="id_asc">Sort by ID (Ascending)</option>
-                                        <option value="id_desc">Sort by ID (Descending)</option>
-                                        <option value="name_asc">Sort by Name (A-Z)</option>
-                                        <option value="name_desc">Sort by Name (Z-A)</option>
-                                    </select>
-                                </div>
-                            </div>
                             <!-- Scrollable Table -->
-                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                                <table class="table table-striped table-bordered">
+                            <div class="table-responsive">
+                                <table id="positionTable" class="table table-striped table-bordered">
+                                    <colgroup>
+                                    <col style="width:5%">
+                                    <col style="width: 70%">
+                                    <col style="width: 29%">
+                                    </colgroup>
                                     <thead>
                                         <tr class="table-primary">
                                             <th>Id</th>
@@ -103,22 +95,14 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" id="searchBarDept" placeholder="Search departments...">
-                                </div>
-                                <div class="col-md-6 text-end">
-                                    <select class="form-select w-auto d-inline-block" id="sortBarDept">
-                                        <option value="id_asc">Sort by ID (Ascending)</option>
-                                        <option value="id_desc">Sort by ID (Descending)</option>
-                                        <option value="name_asc">Sort by Name (A-Z)</option>
-                                        <option value="name_desc">Sort by Name (Z-A)</option>
-                                    </select>
-                                </div>
-                            </div>
                             <!-- Scrollable Table -->
-                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                                <table class="table table-striped table-bordered">
+                            <div class="table-responsive">
+                                <table id="departmentTable" class="table table-striped table-bordered">
+                                    <colgroup>
+                                        <col style="width:5%">
+                                        <col style="width: 70%">
+                                        <col style="width: 29%">
+                                        </colgroup>
                                     <thead>
                                         <tr class="table-primary">
                                             <th>Id</th>
@@ -218,4 +202,28 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#positionTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "lengthChange": true,
+                "pageLength": 10,
+            });
+
+            $('#departmentTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "lengthChange": true,
+                "pageLength": 10,
+            });
+        });
+    </script>
 </x-layout>
