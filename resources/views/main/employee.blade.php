@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="{{ asset('css/employee.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="col-12">
         <div class="row p-3 pb-5">
             <div class="col-auto">

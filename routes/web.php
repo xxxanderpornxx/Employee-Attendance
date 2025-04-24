@@ -107,6 +107,8 @@ Route::delete('/positions/{id}', [DepartmentController::class, 'destroyPosition'
 Route::post('/assign-shift', [EmployeeshiftController::class, 'assignShiftToEmployee'])->name('assignShift');
 
 // Route to handle the QR code scanning
-Route::post('/attendance/scan', [AttendanceController::class, 'scan'])->name('attendance.scan');
-Route::post('/attendance/process-qr-code', [AttendanceController::class, 'processQRCode'])->name('attendance.processQRCode');
-Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+Route::post('/attendance/process-qr-code', [AttendanceController::class, 'processQrCode']);
+Route::get('/attendance', function () {
+    return view('main.attendance');
+})->name('attendance');
+Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');

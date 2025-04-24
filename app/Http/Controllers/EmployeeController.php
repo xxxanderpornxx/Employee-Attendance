@@ -69,15 +69,17 @@ class EmployeeController extends Controller
         $employee->save(); // Save the employee to the database to get the
 
         // Generate a QR code for the employee
-        $qrcodeString = $employee->FirstName . ' ' . $employee->LastName . ' - ' . $employee->PositionID;
+        $qrcodeString = bin2hex(random_bytes(8)); // Generate a random string for the QR code
+        $employee->QRcode = $qrcodeString; // Save the plain string in the database
+
+        // Generate the QR code image
         $qrcode = QrCode::format('png')->size(200)->generate($qrcodeString);
 
         // Save the QR code as a file
         $filename = 'qrcodes/employee_' . $employee->id . '.png';
         Storage::disk('public')->put($filename, $qrcode);
 
-        // Update the employee record with the QR code path
-        $employee->QRcode = $filename;
+        // Save the employee record
         $employee->save();
         return redirect()->route('Employees.index')->with('success', 'Employee created successfully with QR code!');
     }

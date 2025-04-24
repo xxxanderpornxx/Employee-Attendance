@@ -1,37 +1,26 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Employees extends Model
+{
+    use HasFactory;
 
-    // Define the table associated with the model
-{   use HasFactory;
-     protected $table = 'employees';
+    protected $table = 'employees';
+
     protected $fillable = [
-    'FirstName',
-    'MiddleName',
-    'LastName',
-    'Sex',
-    'DateOfBirth',
-    'PositionID',
-    'DepartmentID',
-    'ContactNumber',
-    'Address',
-    'HireDate',
-    'QRcode',
-    'BaseSalary',
-    'Email',
+        'FirstName', 'MiddleName', 'LastName', 'Sex', 'DateOfBirth',
+        'PositionID', 'DepartmentID', 'ContactNumber', 'Address',
+        'HireDate', 'QRcode', 'BaseSalary', 'Email'
     ];
-
 
     public function position()
     {
         return $this->belongsTo(EmpPosition::class, 'PositionID');
     }
-
 
     public function department()
     {
@@ -85,6 +74,7 @@ class Employees extends Model
     {
         return $this->hasOne(Employeeshifts::class, 'EmployeeID');
     }
+
     public function shifts()
     {
         return $this->belongsToMany(Shifts::class, 'employeeshifts', 'EmployeeID', 'ShiftID');
