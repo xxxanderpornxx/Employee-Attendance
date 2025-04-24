@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\empuser;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Hash;
+// use App\Models\empuser;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DepartmentController;
@@ -12,7 +12,9 @@ use App\Http\Controllers\PositionController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeshiftController;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+// use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Http\Controllers\AttendanceController;
+
 
 // Route to show the login form
 
@@ -103,3 +105,8 @@ Route::delete('/positions/{id}', [DepartmentController::class, 'destroyPosition'
 
 // assign shift route
 Route::post('/assign-shift', [EmployeeshiftController::class, 'assignShiftToEmployee'])->name('assignShift');
+
+// Route to handle the QR code scanning
+Route::post('/attendance/scan', [AttendanceController::class, 'scan'])->name('attendance.scan');
+Route::post('/attendance/process-qr-code', [AttendanceController::class, 'processQRCode'])->name('attendance.processQRCode');
+Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');

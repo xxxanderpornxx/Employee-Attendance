@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class attendances extends Model
+class Attendances extends Model
 {
-    public function employee()
+    use HasFactory;
+
+    protected $fillable = ['EmployeeID', 'Type', 'DateTime'];
+
+    public function employees()
     {
-        return $this->belongsTo(employees::class, 'EmployeeID');
+        return $this->belongsTo(Employees::class, 'EmployeeID');
     }
 }

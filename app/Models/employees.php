@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Employees extends Model
-{   protected $table = 'employees';
+
+    // Define the table associated with the model
+{   use HasFactory;
+     protected $table = 'employees';
     protected $fillable = [
     'FirstName',
     'MiddleName',
@@ -63,7 +67,7 @@ class Employees extends Model
      */
     public function attendances()
     {
-        return $this->hasMany(attendances::class, 'EmployeeID');
+        return $this->hasMany(Attendances::class, 'EmployeeID');
     }
 
     /**

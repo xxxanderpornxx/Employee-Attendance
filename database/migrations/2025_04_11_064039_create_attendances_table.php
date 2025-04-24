@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); //attendanceID
             $table->unsignedBigInteger('EmployeeID');
             $table->enum('Type', ['Check-in', 'Check-out']);
-            $table->dateTime('DateTime');
+            $table->timestamp('DateTime')->useCurrent();
             $table->timestamps();
 
             $table->foreign('EmployeeID')->references('id')->on('employees')->onDelete('cascade');

@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+        <title>Document</title>
+
 </head>
 <body>
-<header>
+<header class="">
+
     <div class="logo">
         <img src="{{ asset('images/logo.jpg') }}" alt="Company Logo" class="logo-img">
     </div>
@@ -17,6 +19,7 @@
             Employee Attendance System
         </h1>
     </div>
+    <div>
     <ul class="navlinks">
         <li><a href="/dashboard">Dashboard</a></li>
         <li><a href="/attendance">Attendance</a></li>
@@ -25,6 +28,7 @@
         <li><a href="/shift">Shifts</a></li>
         <li><a href="/payroll">Payroll</a></li>
     </ul>
+</div>
 </header>
 
 <div class="main-layout">
