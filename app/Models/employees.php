@@ -70,7 +70,7 @@ class Employees extends Model
     /**
      * Define the relationship with the EmployeeShift model.
      */
-    public function Employeeshift()
+    public function employeeshift()
     {
         return $this->hasOne(Employeeshifts::class, 'EmployeeID');
     }

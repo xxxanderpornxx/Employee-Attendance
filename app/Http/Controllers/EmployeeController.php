@@ -66,11 +66,11 @@ class EmployeeController extends Controller
         // Create a new employee instance and save it
         $employee = new Employees();
         $employee->fill($validated);
-        $employee->save(); // Save the employee to the database to get the
+        $employee->save();
 
         // Generate a QR code for the employee
-        $qrcodeString = bin2hex(random_bytes(8)); // Generate a random string for the QR code
-        $employee->QRcode = $qrcodeString; // Save the plain string in the database
+        $qrcodeString = bin2hex(random_bytes(8));
+        $employee->QRcode = $qrcodeString;
 
         // Generate the QR code image
         $qrcode = QrCode::format('png')->size(200)->generate($qrcodeString);
@@ -79,7 +79,7 @@ class EmployeeController extends Controller
         $filename = 'qrcodes/employee_' . $employee->id . '.png';
         Storage::disk('public')->put($filename, $qrcode);
 
-        // Save the employee record
+        //
         $employee->save();
         return redirect()->route('Employees.index')->with('success', 'Employee created successfully with QR code!');
     }

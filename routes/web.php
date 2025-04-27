@@ -57,10 +57,7 @@ Route::get('/dashboard', function () {
     return view('main.dashboard');
 })->name('dashboard');
 
-// Attendance route
-Route::get('/attendance', function () {
-    return view('main.attendance');
-})->name('attendance');
+
 
 // Employee route
 Route::get('/employee', [EmployeeController::class, 'index'])->name('Employees.index');
@@ -106,9 +103,11 @@ Route::delete('/positions/{id}', [DepartmentController::class, 'destroyPosition'
 // assign shift route
 Route::post('/assign-shift', [EmployeeshiftController::class, 'assignShiftToEmployee'])->name('assignShift');
 
-// Route to handle the QR code scanning
+// Attendane/Route to handle the QR code scanning
 Route::post('/attendance/process-qr-code', [AttendanceController::class, 'processQrCode']);
 Route::get('/attendance', function () {
     return view('main.attendance');
 })->name('attendance');
 Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
+
+Route::get('/attendance-records', [AttendanceController::class, 'attendanceRecords'])->name('attendance.records');

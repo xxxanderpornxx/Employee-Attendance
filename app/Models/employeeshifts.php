@@ -10,12 +10,12 @@ class Employeeshifts extends Model
         'EmployeeID',
         'ShiftID',
     ];
-    public function Employees()
+    public function employee()
     {
         return $this->belongsTo(Employees::class, 'EmployeeID');
     }
 
-    public function Shifts()
+    public function shift()
     {
         return $this->belongsTo(Shifts::class, 'ShiftID');
     }

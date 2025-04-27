@@ -14,12 +14,11 @@ class shifts extends Model
     ];
 
     public function employeeshifts()
-
     {
-        return $this->hasMany(employeeshifts::class, 'ShiftID');
+        return $this->hasMany(Employeeshifts::class, 'ShiftID');
     }
     public function employees()
     {
-        return $this->belongsToMany(Shifts::class, 'employeeshifts', 'ShiftID', 'EmployeeID');
+        return $this->belongsToMany(Employees::class, 'employeeshifts', 'ShiftID', 'EmployeeID');
     }
 }

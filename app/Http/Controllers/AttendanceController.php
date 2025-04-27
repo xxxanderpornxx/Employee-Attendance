@@ -10,8 +10,14 @@ namespace App\Http\Controllers;
          */
         public function index()
         {
-            $attendances = Attendances::with('employee')->get();
-            return view('main.attendance', compact('attendances'));
+                 $today = now()->toDateString();
+
+                // Fetch attendance logs for today only
+                $attendances = Attendances::with('employee')
+                    ->whereDate('DateTime', $today)
+                    ->get();
+
+                return view('main.attendance', compact('attendances'));
         }
 
         /**
@@ -67,6 +73,10 @@ namespace App\Http\Controllers;
             try {
                 $qrCode = $request->input('qrCode');
 
+                // Validate QR code input
+                if (!$qrCode) {
+                    return response()->json(['message' => 'QR code is required.'], 400);
+                }
 
                 // Find the employee by QR code
                 $employee = Employees::where('QRcode', $qrCode)->first();
@@ -74,12 +84,34 @@ namespace App\Http\Controllers;
                     return response()->json(['message' => 'Employee not found.'], 404);
                 }
 
+                // Get the employee's assigned shift through Employeeshifts
+                $employeeShift = $employee->employeeshift;
+                if (!$employeeShift) {
+                    return response()->json(['message' => 'No shift assigned to this employee.'], 404);
+                }
+
+                $shift = $employeeShift->shift;
+                if (!$shift) {
+                    return response()->json(['message' => 'Shift details not found.'], 404);
+                }
+
+                // Parse shift start and end times
+                $shiftStart = now()->setTimeFromTimeString($shift->StartTime); // e.g., 08:00
+                $shiftEnd = now()->setTimeFromTimeString($shift->EndTime);     // e.g., 12:00
+
                 // Check the last attendance record for this employee
                 $lastAttendance = Attendances::where('EmployeeID', $employee->id)
                     ->orderBy('DateTime', 'desc')
                     ->first();
 
                 $type = $lastAttendance && $lastAttendance->Type === 'Check-in' ? 'Check-out' : 'Check-in';
+
+                // Validate check-out times based on the shift
+                if ($type === 'Check-out') {
+                    if (now()->lessThan($shiftEnd)) {
+                        return response()->json(['message' => 'You are checking out too early.'], 400);
+                    }
+                }
 
                 // Create a new attendance record
                 $attendance = Attendances::create([
@@ -94,7 +126,23 @@ namespace App\Http\Controllers;
                     'employee' => $employee,
                 ]);
             } catch (\Exception $e) {
+
                 return response()->json(['message' => 'An error occurred.', 'error' => $e->getMessage()], 500);
             }
         }
-    }
+        public function attendanceRecords()
+        {
+            $attendances = Attendances::with('employee')
+                ->get()
+                ->map(function ($attendance) {
+                    return [
+                        'id' => $attendance->id,
+                        'employee_name' => $attendance->employee->FirstName . ' ' . $attendance->employee->LastName,
+                        'type' => $attendance->Type,
+                        'date_time' => $attendance->DateTime->timezone('Asia/Manila')->format('Y-m-d | h:i A'),
+                    ];
+                });
+
+            return view('main.attendancerecord', ['attendances' => $attendances]);
+        }
+ }

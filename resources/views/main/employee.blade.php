@@ -1,9 +1,11 @@
 <x-layout>
     <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ asset('css/employee.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <div class="col-12">
         <div class="row p-3 pb-5">
             <div class="col-auto">
@@ -51,7 +53,7 @@
                                         @if ($employee->shifts && $employee->shifts->count() > 0)
                                             @foreach ($employee->shifts as $shift)
                                                 <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->StartTime)->format('h:i A') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->EndTime)->format('h:i A') }}</div>
-                                            @endforeach {{-- End of foreach loop --}}
+                                            @endforeach
                                         @else
                                             N/A
                                         @endif
