@@ -130,19 +130,47 @@ namespace App\Http\Controllers;
                 return response()->json(['message' => 'An error occurred.', 'error' => $e->getMessage()], 500);
             }
         }
-        public function attendanceRecords()
+        public function attendanceRecords(Request $request)
         {
-            $attendances = Attendances::with('employee')
-                ->get()
-                ->map(function ($attendance) {
-                    return [
-                        'id' => $attendance->id,
-                        'employee_name' => $attendance->employee->FirstName . ' ' . $attendance->employee->LastName,
-                        'type' => $attendance->Type,
-                        'date_time' => $attendance->DateTime->timezone('Asia/Manila')->format('Y-m-d | h:i A'),
-                    ];
-                });
+            // Check if a specific employee is selected
+            $employeeId = $request->has('EmployeeID') ? $request->input('EmployeeID') : null;
 
-            return view('main.attendancerecord', ['attendances' => $attendances]);
+            if ($employeeId) {
+                // Fetch attendance records for the specific employee
+                $attendances = Attendances::with('employee')
+                    ->where('EmployeeID', $employeeId)
+                    ->get()
+                    ->map(function ($attendance) {
+                        return [
+                            'id' => $attendance->id,
+                            'EmployeeID' => $attendance->EmployeeID, // Include EmployeeID explicitly
+                            'employee_name' => $attendance->employee->FirstName . ' ' . $attendance->employee->LastName,
+                            'type' => $attendance->Type,
+                            'date_time' => $attendance->DateTime->timezone('Asia/Manila')->format('Y-m-d | h:i A'),
+                        ];
+                    });
+            } else {
+                // Fetch all attendance records
+                $attendances = Attendances::with('employee')
+                    ->get()
+                    ->map(function ($attendance) {
+                        return [
+                            'id' => $attendance->id,
+                            'EmployeeID' => $attendance->EmployeeID, // Include EmployeeID explicitly
+                            'employee_name' => $attendance->employee->FirstName . ' ' . $attendance->employee->LastName,
+                            'type' => $attendance->Type,
+                            'date_time' => $attendance->DateTime->timezone('Asia/Manila')->format('Y-m-d | h:i A'),
+                        ];
+                    });
+            }
+
+            // Fetch all employees for the dropdown
+            $employees = Employees::all();
+
+            return view('main.attendancerecord', [
+                'attendances' => $attendances,
+                'employees' => $employees,
+                'selectedEmployeeId' => $employeeId, // Pass the selected employee ID to the view
+            ]);
         }
  }

@@ -109,5 +109,4 @@ Route::get('/attendance', function () {
     return view('main.attendance');
 })->name('attendance');
 Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
-
 Route::get('/attendance-records', [AttendanceController::class, 'attendanceRecords'])->name('attendance.records');

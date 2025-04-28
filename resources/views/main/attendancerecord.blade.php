@@ -23,61 +23,106 @@
             <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
             <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         </head>
     <body>
 
         <div class="container mt-5">
-            <div class="card" style="max-height: 500px; overflow-y: auto;">
+            <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h1>Attendance Records</h1>
                     <a href="/attendance" class="btn btn-secondary">Back to Attendance</a>
                 </div>
                 <div class="card-body">
+                    <!-- Row for Export Buttons and Filters -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
+                        <!-- Export Buttons -->
                         <div id="exportButtons"></div>
-                        <button id="dateRangePickerButton" class="btn btn-primary">
-                            <i class="bi bi-calendar"></i> Filter by Date Range
-                        </button>
-                    </div>
 
-
-                    <div style="overflow: hidden;">
-                        <table class="table table-striped table-bordered table-hover w-100" id="attendanceTable">
-                            <thead class="table-primary">
-                                <tr>
-                                    <th>EmployeeID</th>
-                                    <th>Employee Name</th>
-                                    <th>Type</th>
-                                    <th>Date & Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($attendances as $attendance)
-                                <tr>
-                                    <td>{{ $attendance['id'] }}</td>
-                                    <td>{{ $attendance['employee_name'] }}</td>
-                                    <td>{{ $attendance['type'] }}</td>
-                                    <td>{{ $attendance['date_time'] }}</td>
-                                </tr>
+                        <!-- Filter Form -->
+                        <form method="GET" action="{{ route('attendance.records') }}" class="d-flex align-items-center">
+                            <!-- Filter by Employee -->
+                            <label for="employeeFilter" class="form-label me-2">Filter by Employee:</label>
+                            <select class="form-select me-2" id="employeeFilter" name="EmployeeID" style="width: 300px; max-height: 200px; overflow-y: auto; margin-right: 10px;">
+                                <option value="" {{ is_null($selectedEmployeeId) ? 'selected' : '' }}>All Employees</option>
+                                @foreach ($employees as $employee)
+                                    <option value="{{ $employee->id }}" {{ $selectedEmployeeId == $employee->id ? 'selected' : '' }}>
+                                        {{ $employee->id }} - {{ $employee->FirstName }} {{ $employee->LastName }}
+                                    </option>
                                 @endforeach
-                            </tbody>
-                        </table>
+                            </select>
+
+                            <!-- Filter by Date -->
+                            <button type="button" id="dateFilterButton" class="btn btn-outline-secondary ml-2" style="margin-left: 10px;">
+                                <i class="bi bi-calendar"></i>
+                                <span id="dateFilterText"></span>
+                            </button>
+                            <input type="hidden" id="dateFilter" name="date_range">
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    $('#dateFilterButton').daterangepicker({
+                                        opens: 'left',
+                                        autoUpdateInput: false,
+                                        locale: {
+                                            cancelLabel: 'Clear'
+                                        }
+                                    }, function(start, end) {
+                                        $('#dateFilter').val(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                                        $('#dateFilterText').text(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                                    });
+
+                                    $('#dateFilterButton').on('cancel.daterangepicker', function () {
+                                        $('#dateFilter').val('');
+                                        $('#dateFilterText').text('Select Date Range');
+                                    });
+                                });
+                            </script>
+                            </script>
+
+                            <button type="submit" class="btn btn-primary me-2">Apply</button>
+                        </form>
                     </div>
+
+                    <!-- DataTable -->
+                    <table class="table table-striped table-bordered table-hover w-100" id="attendanceTable">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>#</th>
+                                <th>Employee ID</th>
+                                <th>Employee Name</th>
+                                <th>Type</th>
+                                <th>Date & Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($attendances as $attendance)
+                            <tr>
+                                <td>{{ $attendance['id'] }}</td>
+                                <td>{{ $attendance['EmployeeID'] }}</td>
+                                <td>{{ $attendance['employee_name'] }}</td>
+                                <td>{{ $attendance['type'] }}</td>
+                                <td>{{ $attendance['date_time'] }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // Initialize the DataTable
                 const table = $('#attendanceTable').DataTable({
                     responsive: true,
                     paging: true,
                     searching: true,
                     ordering: true,
                     info: true,
-                    scrollY: '400px', // Set the height of the table
-                    scrollCollapse: true, // Allow the table to collapse if fewer rows
+                    scrollY: '400px',
+                    scrollCollapse: true,
                     language: {
                         search: "Search:",
                         lengthMenu: "Display _MENU_ records per page",
@@ -86,7 +131,7 @@
                         infoEmpty: "No entries available",
                         infoFiltered: "(filtered from _MAX_ total entries)"
                     },
-                    dom: 'Bfrtip',
+                    dom: 'Bfrtip', // Enable export buttons
                     buttons: [
                         {
                             extend: 'excelHtml5',
@@ -113,34 +158,34 @@
                     }
                 });
 
-                // Initialize the Date Range Picker on the button
-                $('#dateRangePickerButton').daterangepicker({
+                // Initialize Select2 for Employee Filter
+                $('#employeeFilter').select2({
+                    placeholder: "Search or select an employee",
+                    allowClear: true,
+                    dropdownCssClass: 'select2-scrollable'
+                });
+
+                // Initialize Date Range Picker
+                $('#dateFilter').daterangepicker({
                     opens: 'left',
                     autoUpdateInput: false,
                     locale: {
                         cancelLabel: 'Clear'
                     }
-                }, function (start, end) {
-                    const startDate = start.format('YYYY-MM-DD');
-                    const endDate = end.format('YYYY-MM-DD');
-
-                    // Filter the DataTable
-                    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-                        const date = data[3]; // Assuming the 4th column contains the date
-                        const formattedDate = moment(date, 'YYYY-MM-DD | hh:mm A').format('YYYY-MM-DD');
-                        return formattedDate >= startDate && formattedDate <= endDate;
-                    });
-
-                    table.draw();
                 });
 
-                // Clear the date range filter when the picker is canceled
-                $('#dateRangePickerButton').on('cancel.daterangepicker', function () {
-                    $.fn.dataTable.ext.search.pop();
-                    table.draw();
+                // Update the input field when a date range is selected
+                $('#dateFilter').on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('YYYY-MM-DD') + ' to ' + picker.endDate.format('YYYY-MM-DD'));
+                });
+
+                // Clear the input field when the date range picker is canceled
+                $('#dateFilter').on('cancel.daterangepicker', function () {
+                    $(this).val('');
                 });
             });
         </script>
+
     </body>
     </html>
 </x-layout>

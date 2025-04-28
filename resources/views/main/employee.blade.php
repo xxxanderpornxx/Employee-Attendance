@@ -7,9 +7,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div class="col-12">
-        <div class="row p-3 pb-5">
-            <div class="col-auto">
+        <div class="row p-3 align-items-center">
+            <div class="col">
                 <h1 class="pb-3">Employees</h1>
+            </div>
+            <div class="col-auto ms-auto">
                 <button class="addemployeebutton" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
                     <i class="bi bi-plus"></i> Add Employee
                 </button>
@@ -135,7 +137,6 @@
                                 </tr>
 
                                 <!-- Modal for Editing an Employee -->
-                                <!-- Modal for Editing an Employee -->
                                 <div class="modal fade" id="editEmployeeModal-{{ $employee->id }}" tabindex="-1" aria-labelledby="editEmployeeModalLabel-{{ $employee->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
@@ -150,6 +151,7 @@
 
                                                     <!-- Name Row -->
                                                     <div class="row">
+                                                        <h3>Personal Information</h3>
                                                         <div class="col-md-4 mb-3">
                                                             <label for="FirstName-{{ $employee->id }}" class="form-label">First Name</label>
                                                             <input type="text" class="form-control" id="FirstName-{{ $employee->id }}" name="FirstName" value="{{ $employee->FirstName }}" required>
@@ -201,6 +203,8 @@
 
                                                     <!-- Position, Department, and Base Salary Row -->
                                                     <div class="row">
+                                                        <h3>Job Information
+                                                        </h3>
                                                         <div class="col-md-4 mb-3">
                                                             <label for="DepartmentID-{{ $employee->id }}" class="form-label">Department</label>
                                                             <select class="form-select" id="DepartmentID-{{ $employee->id }}" name="DepartmentID" required>
@@ -248,6 +252,7 @@
                                             <div class="modal-body">
                                                 <!-- Employee Details -->
                                                 <div class="row">
+                                                    <h3>Personal Information</h3>
                                                     <div class="col-md-4 mb-3">
                                                         <label class="form-label">First Name</label>
                                                         <input type="text" class="form-control" value="{{ $employee->FirstName }}" readonly>
@@ -293,6 +298,7 @@
                                                 </div>
 
                                                 <div class="row">
+                                                    <h3>Job Information</h3>
                                                     <div class="col-md-4 mb-3">
                                                         <label class="form-label">Department</label>
                                                         <input type="text" class="form-control" value="{{ $employee->department ? $employee->department->DepartmentName : 'N/A' }}" readonly>
@@ -351,6 +357,7 @@
                         @csrf
                         <!-- Name Row -->
                         <div class="row">
+                            <h3>Personal Information</h3>
                             <div class="col-md-4 mb-3">
                                 <label for="FirstName" class="form-label">First Name</label>
                                 <input type="text" class="form-control" id="FirstName" name="FirstName" required>
@@ -402,6 +409,7 @@
 
                         <!-- Position, Department, and Base Salary Row -->
                         <div class="row">
+                            <h3>Job Information</h3>
                             <div class="col-md-4 mb-3">
                                 <label for="DepartmentID" class="form-label">Department</label>
                                 <select class="form-select" id="DepartmentID" name="DepartmentID" required>
