@@ -8,12 +8,14 @@
     </head>
 
     <div class="col-12">
-        <div class="row p-3 pb-5">
+        <div class="row p-3 pb-2 align-items-center">
+            <div class="col">
+            <h1 class="pb-3">Shifts</h1>
+            </div>
             <div class="col-auto">
-                <h1 class="pb-3">Shifts</h1>
-                <button class="addshiftbutton" data-bs-toggle="modal" data-bs-target="#addShiftModal">
-                    <i class="bi bi-plus"></i> + Add Shift
-                </button>
+            <button class="addshiftbutton" data-bs-toggle="modal" data-bs-target="#addShiftModal">
+                <i class="bi bi-plus"></i> + Add Shift
+            </button>
             </div>
         </div>
         <div class="row">

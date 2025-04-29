@@ -34,7 +34,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h1>Attendance Records</h1>
-                    <a href="/attendance" class="btn btn-secondary">Back to Attendance</a>
+                    <a href="/attendance" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Attendance
+                    </a>
                 </div>
                 <div class="card-body">
                     <!-- Row for Export Buttons and Filters -->

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Employees;
 use App\Models\EmpPosition;
+use App\Models\empuser;
 use App\Models\shifts;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
@@ -81,6 +83,13 @@ class EmployeeController extends Controller
 
         //
         $employee->save();
+
+            empuser::create([
+            'name' => $employee->FirstName . ' ' . $employee->LastName, // Combine first and last name
+            'email' => $employee->Email,
+            'role' => 'Employee', // Default role, you can customize this
+            'password' => Hash::make('12345678'), // Hash the default password
+        ]);
         return redirect()->route('Employees.index')->with('success', 'Employee created successfully with QR code!');
     }
 

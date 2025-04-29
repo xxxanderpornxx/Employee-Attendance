@@ -38,8 +38,13 @@
     <aside class="left-column">
         <div class="user-info">
             <p>Logged in as:</p>
-            <p><strong>John Doe</strong></p>
-            <button class="logout-button">Log Out</button>
+            <p><strong>{{ Auth::user()->name }}</strong></p>
+            <p>Role: <strong>{{ Auth::user()->role }}</strong></p>
+            <!-- Logout Form -->
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout-button">Log Out</button>
+            </form>
         </div>
     </aside>
 

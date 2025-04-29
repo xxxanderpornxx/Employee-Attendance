@@ -9,15 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('empusers', function (Blueprint $table) {
             $table->id();
-            // $table->string('employee_id')->unique();
             $table->string('name');
             $table->string('email')->unique();
-            $table->enum('role', ['HR', 'Manager', 'Admin']);
-            $table->string('password')->nullable(); // Store hashed password
+            $table->string('password');
+            $table->enum('role', ['admin', 'manager', 'hr', 'employee'])->default('employee');
             $table->timestamps();
         });
     }
@@ -25,9 +24,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-
     public function down(): void
     {
-        Schema::dropIfExists('empusers'); // Drop the entire table
+        Schema::dropIfExists('empusers');
     }
 };

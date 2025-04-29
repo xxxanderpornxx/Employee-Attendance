@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable; // Extend the base User class
+use Illuminate\Notifications\Notifiable;
 
-class empuser extends Model
+class empuser extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
 
     /**
      * The table associated with the model.
@@ -22,7 +22,6 @@ class empuser extends Model
      * @var array
      */
     protected $fillable = [
-        // 'employee_id',
         'name',
         'email',
         'role',
@@ -30,19 +29,11 @@ class empuser extends Model
     ];
 
     /**
-     * Create a new empuser.
+     * The attributes that should be hidden for arrays.
      *
-     * @param array $data
-     * @return empuser
+     * @var array
      */
-    public static function createEmpuser(array $data)
-    {
-        return self::create([
-            // 'employee_id' => $data['employee_id'],
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'role' => $data['role'],
-            'password' => bcrypt($data['password']), // Hash the password
-        ]);
-    }
+    protected $hidden = [
+        'password',
+    ];
 }

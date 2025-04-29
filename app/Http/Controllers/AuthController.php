@@ -1,0 +1,70 @@
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\empuser; // Use the empuser model
+use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
+
+class AuthController extends Controller
+{
+    public function showLogin() {
+        return view('Login.login'); // Correct the path to match your file structure
+    }
+
+    public function register(Request $request) {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:empusers,email', // Validate against empusers table
+            'password' => 'required|min:6|confirmed', // Ensure password confirmation
+            'role' => 'required|in:admin,manager,hr,employee', // Validate role field
+        ]);
+
+        empuser::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password), // Hash the password
+            'role' => $request->role,
+        ]);
+
+        return redirect('/login')->with('success', 'Registered successfully. Please login.');
+    }
+    public function showRegister() {
+        return view('Login.register'); // Adjust the path to match your file structure
+    }
+
+    public function login(Request $request) {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        // Debugging: Check if the user exists in the database
+        $user = empuser::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->withErrors(['email' => 'User not found.']);
+        }
+
+        // Debugging: Check if the password matches
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['password' => 'Invalid password.']);
+        }
+
+        // Attempt to authenticate
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $request->session()->regenerate();
+            return redirect('/dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'Invalid credentials.',
+        ]);
+    }
+
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
+    }
+}
