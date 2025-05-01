@@ -150,13 +150,13 @@ namespace App\Http\Controllers;
                         ];
                     });
             } else {
-                // Fetch all attendance records
+                // Fetch all attendance records ordered by the most recent first
                 $attendances = Attendances::with('employee')
                     ->get()
                     ->map(function ($attendance) {
                         return [
                             'id' => $attendance->id,
-                            'EmployeeID' => $attendance->EmployeeID, // Include EmployeeID explicitly
+                            'EmployeeID' => $attendance->EmployeeID,
                             'employee_name' => $attendance->employee->FirstName . ' ' . $attendance->employee->LastName,
                             'type' => $attendance->Type,
                             'date_time' => $attendance->DateTime->timezone('Asia/Manila')->format('Y-m-d | h:i A'),

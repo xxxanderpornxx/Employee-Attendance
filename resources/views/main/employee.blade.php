@@ -1,9 +1,16 @@
 <x-layout>
     <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('css/position.css') }}">
 
     <link rel="stylesheet" href="{{ asset('css/employee.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div class="col-12">
@@ -18,16 +25,16 @@
             </div>
         </div>
         <!-- Container for Search, Sort, and Data Table -->
-        <div class="card">
-            <div class="card-body">
+        <div class="card" >
+            <div class="card-body" style="height: 450px;">
                 <!-- Data Table -->
-                <div class="table-responsive">
+                <div class="" style="height: 450px">
                     <table id="employeeTable" class="table table-striped table-bordered">
                         <colgroup>
                             <col style="width:3%;">
-                            <col style="width: 13%;">
-                            <col style="width: 16%;">
                             <col style="width: 12%;">
+                            <col style="width: 14%;">
+                            <col style="width: 10%;">
                             <col style="width: 5%;">
                             <col style="width: 5%;">
                             <col style="width: 10%;">
@@ -79,9 +86,9 @@
                                         </form>
 
                                         <!-- View Button -->
-                                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewEmployeeModal-{{ $employee->id }}">
+                                        <a href="{{ route('employeeview', ['id' => $employee->id]) }}" class="btn btn-info">
                                             <i class="bi bi-eye"></i>
-                                        </button>
+                                        </a>
 
                                         <!-- Assign Shift Button -->
                                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignShiftModal-{{ $employee->id }}">
@@ -95,7 +102,7 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="assignShiftModalLabel-{{ $employee->id }}">Assign Shifts to {{ $employee->FirstName }} {{ $employee->LastName }}</h5>
+                                                        <h4 class="modal-title" id="assignShiftModalLabel-{{ $employee->id }}">Assign Shifts to {{ $employee->FirstName }} {{ $employee->LastName }}</h4>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
@@ -141,7 +148,7 @@
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="editEmployeeModalLabel-{{ $employee->id }}">Edit Employee</h5>
+                                                <h4 class="modal-title" id="editEmployeeModalLabel-{{ $employee->id }}">Edit Employee</h4>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -151,7 +158,7 @@
 
                                                     <!-- Name Row -->
                                                     <div class="row">
-                                                        <h3>Personal Information</h3>
+                                                        <h4>Personal Information</h4>
                                                         <div class="col-md-4 mb-3">
                                                             <label for="FirstName-{{ $employee->id }}" class="form-label">First Name</label>
                                                             <input type="text" class="form-control" id="FirstName-{{ $employee->id }}" name="FirstName" value="{{ $employee->FirstName }}" required>
@@ -203,8 +210,8 @@
 
                                                     <!-- Position, Department, and Base Salary Row -->
                                                     <div class="row">
-                                                        <h3>Job Information
-                                                        </h3>
+                                                        <h4>Job Information
+                                                        </h4>
                                                         <div class="col-md-4 mb-3">
                                                             <label for="DepartmentID-{{ $employee->id }}" class="form-label">Department</label>
                                                             <select class="form-select" id="DepartmentID-{{ $employee->id }}" name="DepartmentID" required>
@@ -230,10 +237,6 @@
                                                             <input type="number" class="form-control" id="BaseSalary-{{ $employee->id }}" name="BaseSalary" value="{{ $employee->BaseSalary }}" required>
                                                         </div>
                                                     </div>
-
-
-
-
                                                     <button type="submit" class="btn btn-primary">Save Changes</button>
                                                 </form>
                                             </div>
@@ -246,13 +249,21 @@
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="viewEmployeeModalLabel-{{ $employee->id }}">View Employee</h5>
+                                                <h4 class="modal-title" id="viewEmployeeModalLabel-{{ $employee->id }}">View Employee</h4>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <!-- Employee Details -->
                                                 <div class="row">
-                                                    <h3>Personal Information</h3>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h4>Personal Information</h4>
+                                                        <!-- View Leave Credit Points Button -->
+                                                        <a class="btn btn-secondary" href="/leavecreditpoint">
+                                                            <i class="bi bi-clipboard-check"></i> View Leave Credits
+                                                        </a>
+                                                        </button>
+                                                    </div>
+
                                                     <div class="col-md-4 mb-3">
                                                         <label class="form-label">First Name</label>
                                                         <input type="text" class="form-control" value="{{ $employee->FirstName }}" readonly>
@@ -298,7 +309,7 @@
                                                 </div>
 
                                                 <div class="row">
-                                                    <h3>Job Information</h3>
+                                                    <h4>Job Information</h4>
                                                     <div class="col-md-4 mb-3">
                                                         <label class="form-label">Department</label>
                                                         <input type="text" class="form-control" value="{{ $employee->department ? $employee->department->DepartmentName : 'N/A' }}" readonly>
@@ -340,7 +351,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addEmployeeModalLabel">Add New Employee</h5>
+                    <h4 class="modal-title" id="addEmployeeModalLabel">Add New Employee</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -357,7 +368,7 @@
                         @csrf
                         <!-- Name Row -->
                         <div class="row">
-                            <h3>Personal Information</h3>
+                            <h4>Personal Information</h4>
                             <div class="col-md-4 mb-3">
                                 <label for="FirstName" class="form-label">First Name</label>
                                 <input type="text" class="form-control" id="FirstName" name="FirstName" required>
@@ -395,7 +406,7 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="Email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="Email" name="Email" required>
+                                <input type="email" class="form-control" id="Email" name="Email" required placeholder="Example@example.com">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="ContactNumber" class="form-label">Contact Number</label>
@@ -409,10 +420,11 @@
 
                         <!-- Position, Department, and Base Salary Row -->
                         <div class="row">
-                            <h3>Job Information</h3>
+                            <h4>Job Information</h4>
                             <div class="col-md-4 mb-3">
                                 <label for="DepartmentID" class="form-label">Department</label>
                                 <select class="form-select" id="DepartmentID" name="DepartmentID" required>
+                                    <option value="" disabled selected>Select a department</option>
                                     @foreach ($departments as $department)
                                         <option value="{{ $department->id }}">{{ $department->DepartmentName }}</option>
                                     @endforeach
@@ -421,6 +433,7 @@
                             <div class="col-md-4 mb-3">
                                 <label for="PositionID" class="form-label">Position</label>
                                 <select class="form-select" id="PositionID" name="PositionID" required>
+                                    <option value="" disabled selected>Select a position</option>
                                     @foreach ($positions as $position)
                                         <option value="{{ $position->id }}">{{ $position->PositionName }}</option>
                                     @endforeach
@@ -428,7 +441,9 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="BaseSalary" class="form-label">Base Salary</label>
-                                <input type="number" class="form-control" id="BaseSalary" name="BaseSalary" required>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="BaseSalary" name="BaseSalary" required>
+                                </div>
                             </div>
                         </div>
 
@@ -476,16 +491,25 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script>
-        $(document).ready(function () {
+ $(document).ready(function () {
             $('#employeeTable').DataTable({
-                "paging": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "lengthChange": true,
-                "pageLength": 10,
+                scrollY: '300px', // Set vertical scroll height
+                scrollCollapse: true,
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    zeroRecords: "No matching records found",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "No entries available",
+                    infoFiltered: "(filtered from _MAX_ total entries)"
+                }
             });
-
         });
     </script>
 </x-layout>

@@ -47,7 +47,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/attendance/process-qr-code', [AttendanceController::class, 'processQrCode']);
     Route::get('/attendance-records', [AttendanceController::class, 'attendanceRecords'])->name('attendance.records');
 
-    // Department routes
+   // employee view routes
+   Route::get('/employeeview/{id}', [EmployeeController::class, 'viewEmployee'])->name('employeeview');
+   //department routes
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
     Route::post('/departments', [DepartmentController::class, 'storeDepartment'])->name('departments.store');
     Route::put('/departments/{id}', [DepartmentController::class, 'updateDepartment'])->name('departments.update');

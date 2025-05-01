@@ -180,5 +180,12 @@ class EmployeeController extends Controller
     // Return the QR code path as a JSON response
     return response()->json(['qrCodePath' => asset('storage/' . $filename)]);
 }
+        public function viewEmployee($id)
+        {
+    // Fetch the employee by ID with related department and position
+    $employee = Employees::with(['department', 'position'])->findOrFail($id);
 
+    // Pass the employee data to the view
+    return view('main.employeeview', compact('employee'));
+        }
 }

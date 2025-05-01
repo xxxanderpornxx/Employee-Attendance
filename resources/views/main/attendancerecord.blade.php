@@ -31,14 +31,12 @@
     <body>
 
         <div class="container mt-5">
-            <div class="card">
+            <div class="card"           style="height: 600  px;">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h1>Attendance Records</h1>
-                    <a href="/attendance" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Back to Attendance
-                    </a>
+                    <a href="/attendance" class="btn btn-secondary"> Back to Attendance</a>
                 </div>
-                <div class="card-body">
+                <div class="card-body " style="height: 450px; overflow-y: auto;">
                     <!-- Row for Export Buttons and Filters -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <!-- Export Buttons -->
@@ -63,27 +61,6 @@
                                 <span id="dateFilterText"></span>
                             </button>
                             <input type="hidden" id="dateFilter" name="date_range">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    $('#dateFilterButton').daterangepicker({
-                                        opens: 'left',
-                                        autoUpdateInput: false,
-                                        locale: {
-                                            cancelLabel: 'Clear'
-                                        }
-                                    }, function(start, end) {
-                                        $('#dateFilter').val(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-                                        $('#dateFilterText').text(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-                                    });
-
-                                    $('#dateFilterButton').on('cancel.daterangepicker', function () {
-                                        $('#dateFilter').val('');
-                                        $('#dateFilterText').text('Select Date Range');
-                                    });
-                                });
-                            </script>
-                            </script>
-
                             <button type="submit" class="btn btn-primary me-2">Apply</button>
                         </form>
                     </div>
@@ -133,7 +110,7 @@
                         infoEmpty: "No entries available",
                         infoFiltered: "(filtered from _MAX_ total entries)"
                     },
-                    dom: 'Bfrtip', // Enable export buttons
+                    dom: 'Bfrtip',
                     buttons: [
                         {
                             extend: 'excelHtml5',
@@ -185,7 +162,37 @@
                 $('#dateFilter').on('cancel.daterangepicker', function () {
                     $(this).val('');
                 });
-            });
+       // Initialize Date Range Picker
+       $('#dateFilterButton').daterangepicker({
+            opens: 'left',
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear',
+                applyLabel: 'Apply',
+                format: 'YYYY-MM-DD'
+            }
+        }, function (start, end) {
+            // Update the hidden input and display text when a date range is selected
+            $('#dateFilter').val(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            $('#dateFilterText').text(start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+
+        // Handle Clear Button
+        $('#dateFilterButton').on('cancel.daterangepicker', function () {
+            $('#dateFilter').val(''); // Clear the hidden input
+            $('#dateFilterText').text('Select Date Range'); // Reset the display text
+        });
+
+        // Retain the selected date range after page reload
+        const selectedDateRange = "{{ request('date_range') }}"; // Get the date range from the request
+        if (selectedDateRange) {
+            const dates = selectedDateRange.split(' to ');
+            $('#dateFilter').val(selectedDateRange); // Set the hidden input value
+            $('#dateFilterText').text(selectedDateRange); // Set the display text
+            $('#dateFilterButton').data('daterangepicker').setStartDate(dates[0]); // Set the start date
+            $('#dateFilterButton').data('daterangepicker').setEndDate(dates[1]); // Set the end date
+        }
+    });
         </script>
 
     </body>

@@ -29,33 +29,33 @@
 
         <!-- Attendance Logs Card -->
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>Attendance Logs</span>
-                    <a href="/attendance-records" class="btn btn-secondary">Attendance Records</a>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped table-bordered table-hover w-100" id="attendanceTable">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>EmployeeID</th>
-                                <th>Employee Name</th>
-                                <th>Type</th>
-                                <th>Date & Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($attendances as $attendance)
-                            <tr>
-                                <td>{{ $attendance->employee->id }}</td>
-                                <td>{{ $attendance->employee->FirstName }} {{ $attendance->employee->LastName }}</td>
-                                <td>{{ $attendance->Type }}</td>
-                                <td>{{ $attendance->DateTime->timezone('Asia/Manila')->format('Y-m-d | h:i A') }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+            <div class="card" style="height: 501px;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Attendance Logs</span>
+                <a href="/attendance-records" class="btn btn-secondary">Attendance Records</a>
+            </div>
+            <div class="card-body" style="overflow-y: auto; height: calc(100% - 56px);">
+                <table class="table table-striped table-bordered table-hover w-100" id="attendanceTable">
+                <thead class="table-primary">
+                    <tr>
+                    <th>EmployeeID</th>
+                    <th>Employee Name</th>
+                    <th>Type</th>
+                    <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($attendances as $attendance)
+                    <tr>
+                    <td>{{ $attendance->employee->id }}</td>
+                    <td>{{ $attendance->employee->FirstName }} {{ $attendance->employee->LastName }}</td>
+                    <td>{{ $attendance->Type }}</td>
+                    <td>{{ $attendance->DateTime->timezone('Asia/Manila')->format('Y-m-d | h:i A') }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                </table>
+            </div>
             </div>
         </div>
     </div>
@@ -68,6 +68,8 @@
                 searching: true,
                 ordering: true,
                 info: true,
+                scrollY: '300px',
+                scrollCollapse: true,
                 language: {
                     search: "Search:",
                     lengthMenu: "Display _MENU_ records per page",
@@ -85,61 +87,45 @@
         </div>
     </div>
 
-    <script>
-        let scanner;
-        let isCameraOn = true;
+            <script>
+                let scanner;
+                let isCameraOn = true;
 
-        document.addEventListener('DOMContentLoaded', startScanner);
+                document.addEventListener('DOMContentLoaded', startScanner);
 
-        function startScanner() {
-            scanner = new Instascan.Scanner({
-                video: document.getElementById('interactive')
+                function startScanner() {
+                    scanner = new Instascan.Scanner({
+                        video: document.getElementById('interactive')
+                    });
+
+                    scanner.addListener('scan', function(content) {
+            fetch('/attendance/process-qr-code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ qrCode: content })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.attendance) {
+                    const tableBody = document.getElementById('attendanceTable').getElementsByTagName('tbody')[0];
+                    const newRow = tableBody.insertRow();
+                    newRow.innerHTML = `
+                        <td>${data.attendance.EmployeeID}</td>
+                        <td>${data.employee.FirstName} ${data.employee.LastName}</td>
+                        <td>${data.attendance.Type}</td>
+                        <td>${new Date(data.attendance.DateTime).toLocaleString('en-US', { timeZone: 'Asia/Manila' })}</td>
+                    `;
+                }
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to process the QR code.');
             });
-
-            scanner.addListener('scan', function(content) {
-                console.log("QR code detected:", content); // Log the scanned QR code
-                document.getElementById("detected-qr-code").textContent = `QR Code: ${content}`;
-
-                // Send the scanned QR code to Laravel backend
-                fetch('/attendance/process-qr-code', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ qrCode: content })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.attendance) {
-                        const dateTime = new Date(data.attendance.DateTime);
-                        const options = {
-                            timeZone: 'Asia/Manila',
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true
-                        };
-                        const formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(dateTime);
-
-                        const tableBody = document.getElementById('attendanceTable').getElementsByTagName('tbody')[0];
-                        const newRow = tableBody.insertRow();
-                        newRow.innerHTML = `
-                            <td>${data.attendance.EmployeeID}</td>
-                            <td>${data.employee.FirstName} ${data.employee.LastName}</td>
-                            <td>${data.attendance.Type}</td>
-                            <td>${formattedDateTime}</td>
-`;
-                    }
-                    alert(data.message);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to process the QR code.');
-                });
-            });
+});
 
             Instascan.Camera.getCameras()
                 .then(function(cameras) {
@@ -186,6 +172,8 @@
                 searching: true,
                 ordering: true,
                 info: true,
+                scrollY: '300px', // Set the height of the scrollable area
+                scrollCollapse: true, // Allow the table to reduce in height when fewer rows are present
                 language: {
                     search: "Search:",
                     lengthMenu: "Display _MENU_ records per page",
