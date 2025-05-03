@@ -99,42 +99,125 @@
 
                                         <!-- Assign Shift Modal -->
                                         <div class="modal fade" id="assignShiftModal-{{ $employee->id }}" tabindex="-1" aria-labelledby="assignShiftModalLabel-{{ $employee->id }}" aria-hidden="true" role="dialog">
-                                            <div class="modal-dialog">
+                                            <div class="modal-dialog modal-lg"> <!-- Changed modal size to modal-lg for wider modal -->
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title" id="assignShiftModalLabel-{{ $employee->id }}">Assign Shifts to {{ $employee->FirstName }} {{ $employee->LastName }}</h4>
+                                                        <h4 class="modal-title" id="assignShiftModalLabel-{{ $employee->id }}">Assign Schedules to {{ $employee->FirstName }} {{ $employee->LastName }}</h4>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form method="POST" action="{{ route('assignShift') }}">
+                                                        <form method="POST" action="{{ route('assignSchedule') }}">
                                                             @csrf
                                                             <input type="hidden" name="EmployeeID" value="{{ $employee->id }}">
 
+                                                            <!-- Display Assigned Schedules -->
                                                             <div class="mb-3">
-                                                                <label for="ShiftID1-{{ $employee->id }}" class="form-label">Select First Shift</label>
-                                                                <select class="form-select" id="ShiftID1-{{ $employee->id }}" name="ShiftIDs[]" required>
-                                                                    <option value="" disabled selected>Select a shift</option>
-                                                                    @foreach ($shifts as $shift)
-                                                                        <option value="{{ $shift->id }}">
-                                                                            {{ $shift->StartTime }} - {{ $shift->EndTime }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                                <h5>Currently Assigned Schedules:</h5>
+                                                                @if ($employee->schedules && $employee->schedules->count() > 0)
+                                                                    <div class="table-responsive " style=" height: 200px; overflow-y: auto;">
+                                                                        <table class="table table-bordered">
+                                                                            <thead class="table-light">
+                                                                                <tr>
+                                                                                    <th>Day</th>
+                                                                                    <th>Shift Start</th>
+                                                                                    <th>Shift End</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach ($employee->schedules as $schedule)
+                                                                                    <tr>
+                                                                                        <td>{{ $schedule->DayOfWeek }}</td>
+                                                                                        <td>{{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->shift->StartTime)->format('h:i A') }}</td>
+                                                                                        <td>{{ \Carbon\Carbon::createFromFormat('H:i:s', $schedule->shift->EndTime)->format('h:i A') }}</td>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                @else
+                                                                    <p>No schedules assigned.</p>
+                                                                @endif
                                                             </div>
+                                                            <hr>
 
-                                                            <div class="mb-3">
-                                                                <label for="ShiftID2-{{ $employee->id }}" class="form-label">Select Second Shift</label>
-                                                                <select class="form-select" id="ShiftID2-{{ $employee->id }}" name="ShiftIDs[]" required>
-                                                                    <option value="" disabled selected>Select a shift</option>
-                                                                    @foreach ($shifts as $shift)
-                                                                        <option value="{{ $shift->id }}">
-                                                                            {{ $shift->StartTime }} - {{ $shift->EndTime }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                            <hr>
+                                                            <!-- Shift 1 Selection -->
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="mb-3">
+                                                                        <label for="ShiftID1-{{ $employee->id }}" class="form-label">Select First Shift</label>
+                                                                        <select class="form-select" id="ShiftID1-{{ $employee->id }}" name="ShiftIDs[1]" required>
+                                                                            <option value="" disabled selected>Select a shift</option>
+                                                                            @foreach ($shifts as $shift)
+                                                                                <option value="{{ $shift->id }}">
+                                                                                    {{ $shift->StartTime }} - {{ $shift->EndTime }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="form-label">Select Days for First Shift</label>
+                                                                    <div class="row">
+                                                                        @foreach (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-check">
+                                                                                    <input class="form-check-input" type="checkbox" name="Days[1][]" value="{{ $day }}" id="Shift1-{{ $day }}-{{ $employee->id }}">
+                                                                                    <label class="form-check-label" for="Shift1-{{ $day }}-{{ $employee->id }}">
+                                                                                        {{ $day }}
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        @endforeach
+                                                                    </div>
+                                                                </div>
                                                             </div>
+                                                            <hr>
 
-                                                            <button type="submit" class="btn btn-success">Assign Shifts</button>
+                                                            <hr>
+                                                              <!-- Shift 2 Selection -->
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="mb-3">
+                                                                             <label for="ShiftID2-{{ $employee->id }}" class="form-label">Select Second Shift (Optional)</label>
+                                                                             <select class="form-select" id="ShiftID2-{{ $employee->id }}" name="ShiftIDs[2]">
+                                                                                    <option value="" disabled selected>Select a shift</option>
+                                                                                    @foreach ($shifts as $shift)
+                                                                                        <option value="{{ $shift->id }}">
+                                                                                        {{ $shift->StartTime }} - {{ $shift->EndTime }}</option>
+                                                                                    @endforeach
+                                                                             </select>
+                                                                         </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                          <label class="form-label">Select Days for Second Shift</label>
+                                                                           <div class="row">
+                                                                                @foreach (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
+                                                                                  <div class="col-md-6">
+                                                                                       <div class="form-check">
+                                                                                         <input class="form-check-input" type="checkbox" name="Days[2][]" value="{{ $day }}" id="Shift2-{{ $day }}-{{ $employee->id }}">
+                                                                                          <label class="form-check-label" for="Shift2-{{ $day }}-{{ $employee->id }}">
+                                                                                             {{ $day }}
+                                                                                            </label>
+                                                                                     </div>
+                                                                                </div>
+                                                                             @endforeach
+                                                                         </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                            <hr>
+
+                                                            <hr>
+                                                            <button type="submit" class="btn btn-success">Assign Schedules</button>
+                                                        </form>
+                                                        <!-- Remove Schedules Button -->
+                                                        <form method="POST" action="{{ route('removeAll', $employee->id) }}" style="margin-top: 10px;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove all schedules and shifts for this employee?');">
+                                                                Remove All Schedules and Shifts
+                                                            </button>
                                                         </form>
                                                     </div>
                                                 </div>

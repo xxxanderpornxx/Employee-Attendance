@@ -9,14 +9,12 @@ namespace App\Http\Controllers;
          * Display a listing of the resource.
          */
         public function index()
-        {
-                 $today = now()->toDateString();
+        {      $today = now()->format('Y-m-d');
 
-                // Fetch attendance logs for today only
-                $attendances = Attendances::with('employee')
-                    ->whereDate('DateTime', $today)
-                    ->get();
-
+            $attendances = Attendances::with('employee')
+                ->whereDate('DateTime', $today) // Filter by today's date
+                ->orderBy('DateTime', 'desc') // Order by most recent first
+                ->get();
                 return view('main.attendance', compact('attendances'));
         }
 
@@ -97,19 +95,68 @@ namespace App\Http\Controllers;
 
                 // Parse shift start and end times
                 $shiftStart = now()->setTimeFromTimeString($shift->StartTime); // e.g., 08:00
-                $shiftEnd = now()->setTimeFromTimeString($shift->EndTime);     // e.g., 12:00
+                $shiftEnd = now()->setTimeFromTimeString($shift->EndTime);     // e.g., 17:00
 
                 // Check the last attendance record for this employee
                 $lastAttendance = Attendances::where('EmployeeID', $employee->id)
                     ->orderBy('DateTime', 'desc')
                     ->first();
 
+                $today = now()->format('Y-m-d');
+
+                // If the last attendance record is from a previous day, reset attendance logic
+                if ($lastAttendance && $lastAttendance->DateTime->format('Y-m-d') < $today) {
+                    // Mark the employee as absent for the previous day if no "Check-out" exists
+                    $lastAttendanceDate = $lastAttendance->DateTime->format('Y-m-d');
+                    $hasCheckedOut = Attendances::where('EmployeeID', $employee->id)
+                        ->whereDate('DateTime', $lastAttendanceDate)
+                        ->where('Type', 'Check-out')
+                        ->exists();
+
+                    if (!$hasCheckedOut) {
+                        Attendances::create([
+                            'EmployeeID' => $employee->id,
+                            'Type' => 'Absent',
+                            'DateTime' => now()->subDay()->endOfDay(), // Mark as absent for the previous day
+                        ]);
+                    }
+
+                    // Reset the attendance logic for the new day
+                    $lastAttendance = null;
+                }
+
+                // Determine the type of attendance (Check-in or Check-out)
                 $type = $lastAttendance && $lastAttendance->Type === 'Check-in' ? 'Check-out' : 'Check-in';
 
                 // Validate check-out times based on the shift
                 if ($type === 'Check-out') {
                     if (now()->lessThan($shiftEnd)) {
                         return response()->json(['message' => 'You are checking out too early.'], 400);
+                    }
+
+                    // Check if the employee has completed both shifts for the day
+                    $completedShifts = Attendances::where('EmployeeID', $employee->id)
+                        ->whereDate('DateTime', $today)
+                        ->where('Type', 'Check-out')
+                        ->count();
+
+                    if ($completedShifts === 2) {
+                        // Calculate leave credits for the completed day
+                        $daysWorked = 1; // 1 full day of work
+                        $leaveCredits = app(EmpleavebalanceController::class)->getLeaveCredits($daysWorked);
+
+                        // Update the employee's leave balances
+                        $leaveBalance = $employee->leaveBalance; // Assuming a relationship exists
+                        if ($leaveBalance) {
+                            $leaveBalance->increment('VacationLeave', $leaveCredits['VacationLeave']);
+                            $leaveBalance->increment('SickLeave', $leaveCredits['SickLeave']);
+                        } else {
+                            // Create a new leave balance record if it doesn't exist
+                            $employee->leaveBalance()->create([
+                                'VacationLeave' => $leaveCredits['VacationLeave'],
+                                'SickLeave' => $leaveCredits['SickLeave'],
+                            ]);
+                        }
                     }
                 }
 
@@ -126,7 +173,6 @@ namespace App\Http\Controllers;
                     'employee' => $employee,
                 ]);
             } catch (\Exception $e) {
-
                 return response()->json(['message' => 'An error occurred.', 'error' => $e->getMessage()], 500);
             }
         }

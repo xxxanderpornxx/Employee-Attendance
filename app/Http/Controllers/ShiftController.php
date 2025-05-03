@@ -34,12 +34,14 @@ class ShiftController extends Controller
     {
         // Validate the request data
         $request->validate([
-            'StartTime' => 'required|date_format:H:i',
+            'ShiftName' => 'string|max:255',
+            'StartTime' => 'date_format:H:i',
             'EndTime' => 'required|date_format:H:i|after:StartTime',
         ]);
 
         // Create a new shift
         shifts::create([
+            'ShiftName' => $request->input('ShiftName'),
             'StartTime' => $request->input('StartTime'),
             'EndTime' => $request->input('EndTime'),
         ]);
@@ -71,7 +73,8 @@ class ShiftController extends Controller
     {
         // Validate the request data
         $request->validate([
-            'StartTime' => 'required|date_format:H:i',
+            'ShiftName' => 'string|max:255',
+            'StartTime' => 'date_format:H:i',
             'EndTime' => 'required|date_format:H:i|after:StartTime',
         ]);
 
@@ -80,6 +83,7 @@ class ShiftController extends Controller
 
         // Update the shift
         $shift->update([
+            'ShiftName' => $request->input('ShiftName'),
             'StartTime' => $request->input('StartTime'),
             'EndTime' => $request->input('EndTime'),
         ]);

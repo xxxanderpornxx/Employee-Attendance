@@ -27,9 +27,7 @@ class Employees extends Model
         return $this->belongsTo(Department::class, 'DepartmentID');
     }
 
-    /**
-     * Define the relationship with the LeaveRequest model.
-     */
+
     public function leaveRequests()
     {
         return $this->hasMany(leaveRequests::class, 'EmployeeID');
@@ -46,9 +44,9 @@ class Employees extends Model
     /**
      * Define the relationship with the EmpLeaveBalance model.
      */
-    public function empLeaveBalance()
+    public function leaveBalance()
     {
-        return $this->hasOne(empleavebalances::class, 'EmployeeID');
+        return $this->hasOne(Empleavebalances::class, 'EmployeeID');
     }
 
     /**
@@ -78,5 +76,9 @@ class Employees extends Model
     public function shifts()
     {
         return $this->belongsToMany(Shifts::class, 'employeeshifts', 'EmployeeID', 'ShiftID');
+    }
+    public function schedules()
+    {
+        return $this->hasMany(EmployeeSchedules::class, 'EmployeeID');
     }
 }

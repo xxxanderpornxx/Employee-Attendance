@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeschedulesController;
 use App\Http\Controllers\EmployeeshiftController;
 
 Route::get('/', function () {
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/shift/{id}', [ShiftController::class, 'update'])->name('shifts.update');
     Route::get('/shift/{id}/edit', [ShiftController::class, 'edit'])->name('shifts.edit');
 
+
     // Attendance routes
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
     Route::post('/attendance/process-qr-code', [AttendanceController::class, 'processQrCode']);
@@ -62,5 +64,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/positions/{id}', [DepartmentController::class, 'destroyPosition'])->name('positions.destroy');
 
     // Assign shift route
-    Route::post('/assign-shift', [EmployeeshiftController::class, 'assignShiftToEmployee'])->name('assignShift');
+    // Route::post('/assign-shift', [EmployeeShiftController::class, 'assignShiftToEmployee'])->name('assignShift');
+    Route::post('/assign-schedule', [EmployeeschedulesController::class, 'assignSchedule'])->name('assignSchedule');
+    Route::delete('/remove-schedules/{employeeId}', [EmployeeschedulesController::class, 'removeSchedules'])->name('removeSchedules');
+    Route::delete('/remove-all/{employeeId}', [EmployeeschedulesController::class, 'removeAll'])->name('removeAll');
+    // payroll routes
+    Route::get('/payroll', function () {
+        return view('main.payroll');
+    })->name('payroll');
+
 });

@@ -10,19 +10,12 @@ return new class extends Migration {
         Schema::create('leaverequests', function (Blueprint $table) {
             $table->id(); // LeaveID
             $table->unsignedBigInteger('EmployeeID'); // Foreign key
-
-            // ENUM type directly in table
-            $table->enum('LeaveType', [
-                'Sick Leave',
-                'Vacation Leave',
-                ]);
-
+            $table->enum('LeaveType', ['Sick Leave','Vacation Leave']);
+            $table->string('Reason');
             $table->date('StartDate');
             $table->date('EndDate');
             $table->enum('Status', ['Pending', 'Approved', 'Denied'])->default('Pending');
             $table->timestamps();
-
-            // Foreign key constraint
             $table->foreign('EmployeeID')->references('id')->on('employees')->onDelete('cascade');
         });
     }

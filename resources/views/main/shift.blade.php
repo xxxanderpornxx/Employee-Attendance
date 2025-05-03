@@ -1,21 +1,21 @@
 <x-layout>
     <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/shift.css') }}">
-    <title> Employee</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+        <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/shift.css') }}">
+        <title>Shifts</title>
     </head>
 
     <div class="col-12">
         <div class="row p-3 pb-2 align-items-center">
             <div class="col">
-            <h1 class="pb-3">Shifts</h1>
+                <h1 class="pb-3">Shifts</h1>
             </div>
             <div class="col-auto">
-            <button class="addshiftbutton" data-bs-toggle="modal" data-bs-target="#addShiftModal">
-                <i class="bi bi-plus"></i> + Add Shift
-            </button>
+                <button class="addshiftbutton" data-bs-toggle="modal" data-bs-target="#addShiftModal">
+                    <i class="bi bi-plus"></i> + Add Shift
+                </button>
             </div>
         </div>
         <div class="row">
@@ -27,6 +27,7 @@
                         <div class="table-responsive">
                             <table id="shiftTable" class="table table-striped table-bordered">
                                 <colgroup>
+                                    <col style="width:05%;">
                                     <col style="width:15%;">
                                     <col style="width: 30%;">
                                     <col style="width: 30%;">
@@ -34,7 +35,8 @@
                                 </colgroup>
                                 <thead>
                                     <tr class="table-primary">
-                                        <th>Shift Id</th>
+                                        <th>Id</th>
+                                        <th>Name</th>
                                         <th>Start Time</th>
                                         <th>End Time</th>
                                         <th>Actions</th>
@@ -44,6 +46,7 @@
                                     @foreach ($shifts as $shift)
                                         <tr>
                                             <td>{{ $shift->id }}</td>
+                                            <td>{{ $shift->ShiftName }}</td>
                                             <td>{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->StartTime)->format('h:i A') }}</td>
                                             <td>{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->EndTime)->format('h:i A') }}</td>
                                             <td>
@@ -73,11 +76,11 @@
                                                             @method('PUT')
                                                             <div class="mb-3">
                                                                 <label for="StartTime-{{ $shift->id }}" class="form-label">Start Time</label>
-                                                                <input type="time" class="form-control" id="StartTime-{{ $shift->id }}" name="StartTime" value="{{ $shift->StartTime }}" required>
+                                                                <input type="time" class="form-control" id="StartTime-{{ $shift->id }}" name="StartTime" value="{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->StartTime)->format('H:i') }}" required>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="EndTime-{{ $shift->id }}" class="form-label">End Time</label>
-                                                                <input type="time" class="form-control" id="EndTime-{{ $shift->id }}" name="EndTime" value="{{ $shift->EndTime }}" required>
+                                                                <input type="time" class="form-control" id="EndTime-{{ $shift->id }}" name="EndTime" value="{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->EndTime)->format('H:i') }}" required>
                                                             </div>
                                                             <button type="submit" class="btn btn-primary">Save Changes</button>
                                                         </form>
@@ -107,6 +110,10 @@
                     <form method="POST" action="{{ route('shifts.store') }}">
                         @csrf
                         <div class="mb-3">
+                            <label for="ShiftName" class="form-label">Shift Name</label>
+                            <input type="text" class="form-control" id="ShiftName" name="ShiftName" required>
+                        </div>
+                        <div class="mb-3">
                             <label for="StartTime" class="form-label">Start Time</label>
                             <input type="time" class="form-control" id="StartTime" name="StartTime" required>
                         </div>
@@ -127,14 +134,7 @@
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#shiftTable').DataTable({
-                "paging": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "lengthChange": true,
-                "pageLength": 10,
-            });
+            $('#shiftTable').DataTable();
         });
     </script>
 </x-layout>

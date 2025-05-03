@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('shifts', function (Blueprint $table) {
             $table->id(); // shiftid
+            $table->string('ShiftName');
             $table->time('StartTime'); // Start time of the shift
             $table->time('EndTime'); // End time of the shift
-            $table->timestamps(); // Created at and updated at timestamps
+            $table->timestamps();
         });
     }
 

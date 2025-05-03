@@ -9,6 +9,7 @@ class shifts extends Model
 {
 
     protected $fillable = [
+        'ShiftName',
         'StartTime',
         'EndTime',
     ];
@@ -20,5 +21,9 @@ class shifts extends Model
     public function employees()
     {
         return $this->belongsToMany(Employees::class, 'employeeshifts', 'ShiftID', 'EmployeeID');
+    }
+    public function schedules()
+    {
+        return $this->hasMany(EmployeeSchedules::class);
     }
 }

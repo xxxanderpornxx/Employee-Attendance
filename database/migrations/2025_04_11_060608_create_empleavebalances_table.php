@@ -13,16 +13,10 @@ return new class extends Migration
     {
         Schema::create('empleavebalances', function (Blueprint $table) {
             $table->id(); // EmpLeaveBalanceID
-            $table->unsignedBigInteger('EmployeeID'); // Foreign Key
-
-            $table->integer('VacationLeave')->default(0); // Number of VL days left
-            $table->integer('SickLeave')->default(0);     // Number of SL days left
-            $table->text('Reason')->nullable();           // Optional explanation
-            $table->enum('Status', ['Excused', 'Unexcused'])->default('Excused');
-
+            $table->unsignedBigInteger('EmployeeID');   // Foreign Key
+            $table->decimal('VacationLeave', 5, 2)->default(0.00);
+            $table->decimal('SickLeave', 5, 2)->default(0.00);
             $table->timestamps();
-
-            // Foreign Key Constraint
             $table->foreign('EmployeeID')->references('id')->on('employees')->onDelete('cascade');
         });
     }
