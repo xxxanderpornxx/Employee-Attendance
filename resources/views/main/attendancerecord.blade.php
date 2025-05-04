@@ -73,6 +73,8 @@
                                 <th>Employee ID</th>
                                 <th>Employee Name</th>
                                 <th>Type</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
                                 <th>Date & Time</th>
                             </tr>
                         </thead>
@@ -83,6 +85,8 @@
                                 <td>{{ $attendance['EmployeeID'] }}</td>
                                 <td>{{ $attendance['employee_name'] }}</td>
                                 <td>{{ $attendance['type'] }}</td>
+                                <td>{{ $attendance['status'] }}</td>
+                                <td>{{ $attendance['remarks'] }}</td>
                                 <td>{{ $attendance['date_time'] }}</td>
                             </tr>
                             @endforeach

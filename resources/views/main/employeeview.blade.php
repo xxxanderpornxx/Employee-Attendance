@@ -50,6 +50,20 @@
                             <input type="text" class="form-control" value="{{ $employee->Address }}" readonly>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" value="{{ $employee->ContactNumber }}" readonly>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-control" value="{{ $employee->Email }}" readonly>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Hire Date</label>
+                            <input type="text" class="form-control" value="{{ $employee->HireDate }}" readonly>
+                        </div>
+                    </div>
                 </div>
             </div>
 

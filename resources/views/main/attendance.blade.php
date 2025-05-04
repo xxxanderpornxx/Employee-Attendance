@@ -27,6 +27,12 @@
                     <video id="interactive" style="width: 100%; height: auto; max-height: 200px;"></video>
                     <button id="toggle-camera" class="btn btn-primary mt-3" onclick="toggleCamera()">Turn Off Camera</button>
                     <p id="detected-qr-code" class="mt-3 text-success text-center"></p>
+                    <p id="employee-name" class="mt-3 text-info text-center"></p>
+                    <!-- Placeholder for Employee Information -->
+                    <div id="employee-info" class="mt-3 text-center">
+                        <p id="employee-id" class="text-secondary"></p>
+                        <p id="employee-fullname" class="text-secondary"></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,52 +106,64 @@
                     });
 
                     scanner.addListener('scan', function (content) {
-                        // Send the QR code to the server
-                        fetch('/attendance/process-qr-code', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            },
-                            body: JSON.stringify({ qrCode: content })
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('Server Response:', data); // Log the response for debugging
-                                if (data.attendance) {
-                                    // Show a success notification
-                                    toastr.success(data.message, 'Success', {
-                                        positionClass: 'toast-top-right',
-                                        timeOut: 3000, // 3 seconds
-                                        progressBar: true
-                                    });
+    // Send the QR code to the server
+    fetch('/attendance/process-qr-code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ qrCode: content })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Server Response:', data); // Log the response for debugging
+            if (data.attendance) {
+                // Show a success notification
+                toastr.success(data.message, 'Success', {
+                    positionClass: 'toast-top-right',
+                    timeOut: 3000, // 3 seconds
+                    progressBar: true
+                });
 
-                                    // Dynamically add the new attendance record to the DataTable
-                                    table.row.add([
-                                        data.attendance.id,
-                                        data.employee.id,
-                                        `${data.employee.FirstName} ${data.employee.LastName}`,
-                                        data.attendance.Type,
-                                        new Date(data.attendance.DateTime).toLocaleString('en-US', { timeZone: 'Asia/Manila' })
-                                    ]).draw(false); // Redraw the table without resetting pagination
-                                } else {
-                                    // Show an error notification
-                                    toastr.error(data.message, 'Error', {
-                                        positionClass: 'toast-top-right',
-                                        timeOut: 3000,
-                                        progressBar: true
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                toastr.error('Failed to process the QR code. Please try again.', 'Error', {
-                                    positionClass: 'toast-top-right',
-                                    timeOut: 3000,
-                                    progressBar: true
-                                });
-                            });
-                    });
+                // Dynamically add the new attendance record to the DataTable
+                table.row.add([
+                    data.attendance.id,
+                    data.employee.id,
+                    `${data.employee.FirstName} ${data.employee.LastName}`,
+                    data.attendance.Type,
+                    new Date(data.attendance.DateTime).toLocaleString('en-US', { timeZone: 'Asia/Manila' })
+                ]).draw(false); // Redraw the table without resetting pagination
+
+                // Update the employee information
+                document.getElementById('employee-id').textContent = `Employee ID: ${data.employee.id}`;
+                document.getElementById('employee-fullname').textContent = `Name: ${data.employee.FirstName} ${data.employee.LastName}`;
+            } else {
+                // Show an error notification
+                toastr.error(data.message, 'Error', {
+                    positionClass: 'toast-top-right',
+                    timeOut: 3000,
+                    progressBar: true
+                });
+
+                // Clear the employee information if there's an error
+                document.getElementById('employee-id').textContent = '';
+                document.getElementById('employee-fullname').textContent = '';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            toastr.error('Failed to process the QR code. Please try again.', 'Error', {
+                positionClass: 'toast-top-right',
+                timeOut: 3000,
+                progressBar: true
+            });
+
+            // Clear the employee information if there's an error
+            document.getElementById('employee-id').textContent = '';
+            document.getElementById('employee-fullname').textContent = '';
+        });
+});
 
                     let isCameraOn = true;
 

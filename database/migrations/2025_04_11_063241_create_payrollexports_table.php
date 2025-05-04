@@ -16,11 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('EmployeeID');
             $table->date('PayPeriodStart');
             $table->date('PayPeriodEnd');
-            $table->decimal('TotalHoursWorked', 8, 2); // Adjust precision as needed
-            $table->decimal('OvertimeHours', 8, 2); // Adjust precision as needed
+            $table->decimal('TotalHoursWorked', 8, 2);
+            $table->decimal('OvertimeHours', 8, 2);
             $table->integer('LeaveDays');
             $table->date('ExportDate');
-            $table->timestamps(); // Adds created_at and updated_at columns
+            $table->timestamps();
 
             // Foreign Key Constraint
             $table->foreign('EmployeeID')->references('id')->on('employees')->onDelete('cascade'); // Assumes you have an 'employees' table
