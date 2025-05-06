@@ -1,0 +1,58 @@
+/* Reset and base styles */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Navbar styles */
+.navbar {
+    display: flex; /* Use flexbox to align items horizontally */
+    align-items: center; /* Vertically align items */
+    justify-content: space-between; /* Space between logo and links */
+    background-color: #34abc7; /* Navbar background color */
+    padding: 10px 20px; /* Add padding for spacing */
+}
+
+.logo {
+    flex-shrink: 0; /* Prevent the logo from shrinking */
+}
+
+.logo-img {
+    height: 75px; /* Adjust the height of the logo */
+    width: auto; /* Maintain aspect ratio */
+}
+
+/* Navbar links */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Align links horizontally */
+    gap: 20px; /* Add spacing between links */
+}
+
+li {
+    float: none; /* Remove float to work with flexbox */
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+}
+
+li a:hover {
+    background-color: #098eaf; /* Hover color */
+}
+
+.active {
+    background-color: #04aa6d; /* Active link color */
+}
