@@ -33,33 +33,28 @@ class AuthController extends Controller
         return view('Login.register'); // Adjust the path to match your file structure
     }
 
-    public function login(Request $request) {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
 
-        // Debugging: Check if the user exists in the database
-        $user = empuser::where('email', $request->email)->first();
-        if (!$user) {
-            return back()->withErrors(['email' => 'User not found.']);
+        // Attempt to authenticate using the employee guard
+        if (auth()->guard('employee')->attempt($credentials)) {
+            $user = auth()->guard('employee')->user();
+
+            // Redirect based on role
+            if ($user->role === 'employee') {
+                return redirect()->route('employee.profile');
+            }
+
+            if ($user->role === 'admin') {
+                return redirect()->route('dashboard');
+            }
         }
 
-        // Debugging: Check if the password matches
-        if (!Hash::check($request->password, $user->password)) {
-            return back()->withErrors(['password' => 'Invalid password.']);
-        }
-
-        // Attempt to authenticate
-        if (Auth::attempt($request->only('email', 'password'))) {
-            $request->session()->regenerate();
-            return redirect('/dashboard');
-        }
-
-        return back()->withErrors([
-            'email' => 'Invalid credentials.',
-        ]);
+        // If authentication fails
+        return back()->withErrors(['email' => 'Invalid credentials.']);
     }
+
 
     public function logout(Request $request) {
         Auth::logout();

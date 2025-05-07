@@ -187,5 +187,27 @@ class EmployeeController extends Controller
 
     // Pass the employee data to the view
     return view('main.employeeview', compact('employee'));
-        }
+
+
+}
+
+public function profile()
+{
+    // Use the employee guard instead of web guard
+    $authUser = auth()->guard('employee')->user();
+
+    if (!$authUser) {
+        return redirect()->route('login')->with('error', 'Please login to access your profile.');
+    }
+
+    $employee = Employees::where('Email', $authUser->email)
+        ->with(['department', 'position', 'leaveBalance'])
+        ->first();
+
+    if (!$employee) {
+        return redirect()->route('login')->with('error', 'Employee data not found.');
+    }
+
+    return view('employee.profile', compact('employee'));
+}
 }

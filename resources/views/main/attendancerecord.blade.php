@@ -67,10 +67,20 @@
 
                     <!-- DataTable -->
                     <table class="table table-striped table-bordered table-hover w-100" id="attendanceTable">
+                       <colgroup>
+                            <col style="width: 3%;">
+                            <col style="width: 5%;">
+                            <col style="width: 20%;">
+                            <col style="width: 10%;">
+                            <col style="width: 10%;">
+                            <col style="width: 20%;">
+                            <col style="width: 25%;">
+                    </colgroup>
                         <thead class="table-primary">
+
                             <tr>
                                 <th>#</th>
-                                <th>Employee ID</th>
+                                <th class="text-center">ID</th>
                                 <th>Employee Name</th>
                                 <th>Type</th>
                                 <th>Status</th>
@@ -81,8 +91,8 @@
                         <tbody>
                             @foreach ($attendances as $attendance)
                             <tr>
-                                <td>{{ $attendance['id'] }}</td>
-                                <td>{{ $attendance['EmployeeID'] }}</td>
+                                <td class="text-center">{{ $attendance['id'] }}</td>
+                                <td class="text-center">{{ $attendance['EmployeeID'] }}</td>
                                 <td>{{ $attendance['employee_name'] }}</td>
                                 <td>{{ $attendance['type'] }}</td>
                                 <td>{{ $attendance['status'] }}</td>

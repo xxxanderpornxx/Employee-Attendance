@@ -33,17 +33,13 @@ class Employees extends Model
         return $this->hasMany(leaveRequests::class, 'EmployeeID');
     }
 
-    /**
-     * Define the relationship with the OvertimeRequest model.
-     */
+
     public function overtimeRequests()
     {
         return $this->hasMany(overtimeRequests::class, 'EmployeeID');
     }
 
-    /**
-     * Define the relationship with the EmpLeaveBalance model.
-     */
+
     public function leaveBalance()
     {
         return $this->hasOne(Empleavebalances::class, 'EmployeeID');
@@ -81,4 +77,12 @@ class Employees extends Model
     {
         return $this->hasMany(EmployeeSchedules::class, 'EmployeeID');
     }
+    public function employee()
+    {
+        return $this->hasOne(Employees::class, 'Email', 'email'); // Match email fields
+    }
+
+    protected $hidden = [
+        'Password', 'remember_token',
+    ];
 }

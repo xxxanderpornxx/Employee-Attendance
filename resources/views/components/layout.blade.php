@@ -17,7 +17,7 @@
         <img src="{{ asset('images/logo.jpg') }}" alt="Company Logo" class="logo-img">
     </div>
     <div>
-        <h1>
+        <h1 style="color: white; font-size: 24px; margin: 0;">
             Employee Attendance System
         </h1>
     </div>
@@ -26,12 +26,15 @@
         <li><a href="/dashboard">Dashboard</a></li>
         <li><a href="/attendance">Attendance</a></li>
         <li><a href="/employee">Employee</a></li>
+        <li><a href="/leaverequests">Leave Request</a></li>
+        <li><a href="/overtimerequests">Overtime Request</a></li>
         <li><a href="/positions">Roles</a></li>
         <li><a href="/shift">Shifts</a></li>
         <li><a href="/payroll">Payroll</a></li>
     </ul>
-</div>
+    </div>
 </header>
+
 
 <div class="main-layout">
 

@@ -214,11 +214,12 @@ namespace App\Http\Controllers;
                             'EmployeeID' => $attendance->EmployeeID, // Include EmployeeID explicitly
                             'employee_name' => $attendance->employee->FirstName . ' ' . $attendance->employee->LastName,
                             'type' => $attendance->Type,
+                            'status' =>$attendance -> Status,
+                            'remarks' => $attendance->Remarks,
                             'date_time' => $attendance->DateTime->timezone('Asia/Manila')->format('Y-m-d | h:i A'),
                         ];
                     });
             } else {
-                // Fetch all attendance records ordered by the most recent first
                 $attendances = Attendances::with('employee')
                     ->get()
                     ->map(function ($attendance) {
@@ -243,4 +244,81 @@ namespace App\Http\Controllers;
                 'selectedEmployeeId' => $employeeId, // Pass the selected employee ID to the view
             ]);
         }
- }
+        public function getEmployeeAttendanceRecords()
+        {
+            $empuser = auth()->guard('employee')->user();
+
+            if (!$empuser) {
+                abort(403, 'Unauthorized access');
+            }
+
+            // Get the corresponding employee record using the email
+            $employee = Employees::where('Email', $empuser->email)->first();
+
+            if (!$employee) {
+                abort(404, 'Employee record not found');
+            }
+
+            // Fetch attendance records for the authenticated employee
+            $attendanceLogs = Attendances::where('EmployeeID', $employee->id)
+                ->orderBy('DateTime', 'desc')
+                ->get();
+
+            // Map the attendance logs for the view
+            $mappedLogs = $attendanceLogs->map(function ($attendance) {
+                return [
+                    'id' => $attendance->id,
+                    'type' => $attendance->Type,
+                    'status' => $attendance->Status,
+                    'remarks' => $attendance->Remarks,
+                    'date_time' => $attendance->DateTime->format('Y-m-d | h:i A'),
+                ];
+            });
+
+
+
+            return view('employee.attendancerecords', compact('mappedLogs'));
+        }
+
+    // Mark absent employees who have no check-in record for today
+    public function markAbsentEmployees()
+    {
+        $today = Carbon::now()->format('Y-m-d');
+        $dayOfWeek = Carbon::now()->format('l'); // e.g., "Monday"
+
+        // Get all employees scheduled to work today
+        $scheduledEmployees = Employees::whereHas('schedules', function ($query) use ($dayOfWeek) {
+            $query->where('DayOfWeek', $dayOfWeek);
+        })->get();
+
+        foreach ($scheduledEmployees as $employee) {
+            // Check if the employee has a check-in record for today
+            $hasCheckIn = Attendances::where('EmployeeID', $employee->id)
+                ->whereDate('DateTime', $today)
+                ->where('Type', 'Check-in')
+                ->exists();
+
+            // If no check-in record exists, mark the employee as absent
+            if (!$hasCheckIn) {
+                // Get the employee's shift for today
+                $schedule = $employee->schedules()
+                    ->where('DayOfWeek', $dayOfWeek)
+                    ->with('shift')
+                    ->first();
+
+                if ($schedule) {
+                    Attendances::create([
+                        'EmployeeID' => $employee->id,
+                        'Type' => 'Auto-marked',
+                        'Status' => 'Absent',
+                        'Remarks' => 'Automatically marked absent - No check-in record',
+                        'DateTime' => Carbon::parse($today . ' ' . $schedule->shift->EndTime),
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['message' => 'Absent employees marked successfully.']);
+    }
+
+    }

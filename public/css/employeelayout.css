@@ -1,16 +1,36 @@
+/* General Styles */
 body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
+/* Header Styles */
 header {
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Vertically center all child elements, including the <ul> */
-    justify-content: space-between; /* Space between logo/title and links */
-    padding: 0 20px; /* Add padding for spacing */
-    background-color: #34abc7; /* Navbar background color */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    position: fixed; /* Fix the header at the top */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Ensure header stays above other content */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background-color: #34abc7;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: white;
+    height: 80px; /* Fixed height for header */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 /* Logo styling */
@@ -24,20 +44,22 @@ header {
     width: auto; /* Maintain aspect ratio */
 }
 
-/* Navbar links */
-ul {
+/* Navigation Styles */
+nav ul {
     display: flex; /* Align links horizontally */
     align-items: center; /* Vertically center the links */
     list-style-type: none;
+    margin: 0;
     padding: 0;
+    margin-left: auto; /* Push the links to the right */
 }
 
-li {
+nav ul li {
     position: relative;
     margin: 0;
 }
 
-li a {
+nav ul li a {
     display: block;
     color: white;
     text-align: center;
@@ -48,7 +70,7 @@ li a {
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
 }
 
-li a:hover {
+nav ul li a:hover {
     background-color: #2a94a3; /* Hover color */
     color: #e0f7fa; /* Slightly lighter text on hover */
 }
@@ -60,7 +82,7 @@ li a:hover {
 }
 
 /* Add a subtle separator between links */
-li:not(:last-child)::after {
+nav ul li:not(:last-child)::after {
     content: "";
     position: absolute;
     top: 50%;
@@ -71,27 +93,33 @@ li:not(:last-child)::after {
     background-color: rgba(255, 255, 255, 0.5); /* Subtle separator */
 }
 
-/* Main layout styles */
+/* Main Layout Styles */
 .main-layout {
     display: flex;
-    overflow: hidden; /* Prevent scrolling on the main layout */
+    margin-top: 80px; /* Add margin equal to header height */
+    min-height: calc(
+        100vh - 80px
+    ); /* Subtract header height from viewport height */
 }
 
-/* Left column styles */
+/* Left Column Styles */
 .left-column {
-    width: 100px; /* Fixed width for the left column */
-    background-color: #d3d3d3; /* Gray background */
+    position: fixed; /* Fix the sidebar */
+    top: 80px; /* Position below fixed header */
+    left: 0;
+    width: 200px;
+    background-color: #d3d3d3;
     padding: 10px;
     padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow on the right */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Align items to the top initially */
-    height: 88vh; /* Set height to full viewport height */
+    height: calc(100vh - 80px); /* Subtract header height */
+    overflow-y: auto; /* Allow scrolling if content is too long */
 }
 
-/* User info styles */
+/* User Info Styles */
 .user-info {
     text-align: center;
     margin-top: auto; /* Push the content to the bottom */
@@ -112,40 +140,46 @@ li:not(:last-child)::after {
     background-color: #e60000;
 }
 
-/* Main content styles */
+/* Main Content Styles */
 .main-content {
-    flex-grow: 1; /* Take up remaining space */
+    margin-left: 200px; /* Match sidebar width */
+    flex-grow: 1;
     padding: 20px;
-    overflow-y: auto; /* Allow scrolling if content overflows */
+    overflow-y: auto;
+    background-color: white;
+    min-height: calc(100vh - 80px); /* Subtract header height */
 }
 
-.navlinks {
-    display: flex;
-    margin-top: 20px; /* Add spacing from the top */
-}
-/* Responsive design */
+/* Responsive Design */
 @media (max-width: 768px) {
     header {
-        flex-direction: column; /* Stack logo and links vertically on smaller screens */
+        position: relative; /* Reset position for mobile */
+        height: auto;
     }
 
-    ul {
+    nav ul {
         flex-direction: column; /* Stack items vertically on smaller screens */
         margin-left: 0; /* Reset margin for smaller screens */
     }
 
-    li a {
+    nav ul li a {
         padding: 12px 16px;
         font-size: 14px;
     }
 
     .main-layout {
-        flex-direction: column; /* Stack left column and main content vertically */
+        margin-top: 0;
+        flex-direction: column;
     }
 
     .left-column {
-        width: 100%; /* Full width for smaller screens */
-        height: auto; /* Adjust height */
-        box-shadow: none; /* Remove shadow */
+        position: relative; /* Reset position for mobile */
+        width: 100%;
+        height: auto;
+        top: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
     }
 }
