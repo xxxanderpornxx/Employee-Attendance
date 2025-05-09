@@ -1,4 +1,4 @@
-<x-layout>
+
     <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -26,10 +26,17 @@
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
             <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+            <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         </head>
     <body>
-
+        <x-layout>
         <div class="container mt-5">
             <div class="card"           style="height: 600  px;">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -39,8 +46,10 @@
                 <div class="card-body " style="height: 450px; overflow-y: auto;">
                     <!-- Row for Export Buttons and Filters -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
+
                         <!-- Export Buttons -->
                         <div id="exportButtons"></div>
+
 
                         <!-- Filter Form -->
                         <form method="GET" action="{{ route('attendance.records') }}" class="d-flex align-items-center">
@@ -116,6 +125,39 @@
                     info: true,
                     scrollY: '400px',
                     scrollCollapse: true,
+                    order:[[0, 'desc']],
+                    buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="bi bi-file-earmark-excel"></i> Excel',
+                    className: 'btn btn-success me-2',
+                    title: 'Attendance Records',
+                    exportOptions: {
+                        columns: ':visible' // Export only visible columns
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="bi bi-file-earmark-pdf"></i> PDF',
+                    className: 'btn btn-danger me-2',
+                    title: 'Attendance Records',
+                    orientation: 'landscape', // Set PDF orientation
+                    pageSize: 'A4', // Set PDF page size
+                    exportOptions: {
+                        columns: ':visible' // Export only visible columns
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="bi bi-printer"></i> Print',
+                    className: 'btn btn-primary',
+                    title: 'Attendance Records',
+                    exportOptions: {
+                        columns: ':visible' // Print only visible columns
+                    }
+                }
+            ],
+
                     language: {
                         search: "Search:",
                         lengthMenu: "Display _MENU_ records per page",
@@ -124,27 +166,8 @@
                         infoEmpty: "No entries available",
                         infoFiltered: "(filtered from _MAX_ total entries)"
                     },
-                    dom: 'Bfrtip',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            title: 'Attendance Records',
-                            text: 'Export to Excel',
-                            className: 'btn btn-success'
-                        },
-                        {
-                            extend: 'pdfHtml5',
-                            title: 'Attendance Records',
-                            text: 'Export to PDF',
-                            className: 'btn btn-danger'
-                        },
-                        {
-                            extend: 'print',
-                            title: 'Attendance Records',
-                            text: 'Print',
-                            className: 'btn btn-primary'
-                        }
-                    ],
+
+
                     initComplete: function () {
                         // Move the export buttons to the custom container
                         this.api().buttons().container().appendTo('#exportButtons');
@@ -206,9 +229,11 @@
             $('#dateFilterButton').data('daterangepicker').setStartDate(dates[0]); // Set the start date
             $('#dateFilterButton').data('daterangepicker').setEndDate(dates[1]); // Set the end date
         }
-    });
-        </script>
 
+    });
+
+        </script>
+</x-layout>
     </body>
     </html>
-</x-layout>
+

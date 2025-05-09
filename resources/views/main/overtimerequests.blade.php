@@ -39,8 +39,16 @@
                     <div class="tab-pane fade show active" id="pending" role="tabpanel">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered" id="pendingTable">
+                                <colgroup>
+                                    <col style="width:1% ;">
+                                    <col style="width: 20% ;">
+                                    <col style="width:20% ;">
+                                    <col style="width:20% ;">
+                                    <col style="width:20% ;">
+                                    <col style="width:15% ;">
+                                    </colgroup>
                                 <thead>
-                                    <tr>
+                                    <tr class="table-primary">
                                         <th>ID</th>
                                         <th>Employee</th>
                                         <th>Date</th>
@@ -84,8 +92,17 @@
                     <div class="tab-pane fade" id="approved" role="tabpanel">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered" id="approvedTable">
+                                <colgroup>
+                                    <col style="width:1% ;">
+                                    <col style="width: 20% ;">
+                                    <col style="width:20% ;">
+                                    <col style="width:20% ;">
+                                    <col style="width:20% ;">
+                                    <col style="width:15% ;">
+
+                                    </colgroup>
                                 <thead>
-                                    <tr>
+                                    <tr class="table-primary">
                                         <th>ID</th>
                                         <th>Employee</th>
                                         <th>Date</th>
@@ -118,8 +135,17 @@
                     <div class="tab-pane fade" id="Rejected" role="tabpanel">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered" id="RejectedTable">
+                                <colgroup>
+                                <col style="width:1% ;">
+                                <col style="width: 20% ;">
+                                <col style="width:20% ;">
+                                <col style="width:20% ;">
+                                <col style="width:20% ;">
+                                <col style="width:15% ;">
+
+                                </colgroup>
                                 <thead>
-                                    <tr>
+                                    <tr class="table-primary">
                                         <th>ID</th>
                                         <th>Employee</th>
                                         <th>Date</th>
@@ -154,11 +180,26 @@
         <!-- Initialize DataTables for each table -->
         <script>
             $(document).ready(function() {
-                $('#pendingTable, #approvedTable, #RejectedTable').each(function() {
+                const table= ('#pendingTable, #approvedTable, #RejectedTable').each(function() {
                     $(this).DataTable({
-                        order: [[0, 'desc']], // Sort by ID descending
+                        scrollY: '300px', // Set vertical scroll height
+                        scrollCollapse: true,
+                        paging: true,
+                        searching: true,
+                        ordering: true,
+                        info: true,
+                        lengthChange: true,
                         pageLength: 10,
-                        responsive: true
+                        order:[[0,'desc']],
+                        language: {
+            search: "Search:",
+            lengthMenu: "Display _MENU_ records per page",
+            zeroRecords: "No matching records found",
+            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+            infoEmpty: "No entries available",
+            infoFiltered: "(filtered from _MAX_ total entries)"
+        },
+
                     });
                 });
             });

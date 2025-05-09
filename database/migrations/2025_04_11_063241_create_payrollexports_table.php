@@ -9,28 +9,29 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('payrollexports', function (Blueprint $table) {
             $table->id(); // PayrollID
-            $table->unsignedBigInteger('EmployeeID');
+            $table->unsignedBigInteger('EmployeeID'); // FK to employees
             $table->date('PayPeriodStart');
             $table->date('PayPeriodEnd');
-            $table->decimal('TotalHoursWorked', 8, 2);
-            $table->decimal('OvertimeHours', 8, 2);
-            $table->integer('LeaveDays');
+            $table->integer('DaysWorked')->default(0);
+            $table->decimal('OvertimeHours', 8, 2)->default(0.00);
+            $table->integer('LeaveDays')->default(0);
+            $table->integer('AbsentDays')->default(0);
+            $table->integer('LateMinutes')->default(0);
+            $table->decimal('GrossPay', 12, 2)->default(0.00);
+            $table->decimal('NetPay', 12, 2)->default(0.00);
             $table->date('ExportDate');
             $table->timestamps();
 
-            // Foreign Key Constraint
-            $table->foreign('EmployeeID')->references('id')->on('employees')->onDelete('cascade'); // Assumes you have an 'employees' table
+            // Foreign key constraint
+            $table->foreign('EmployeeID')->references('id')->on('employees')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('payrollexports');
     }

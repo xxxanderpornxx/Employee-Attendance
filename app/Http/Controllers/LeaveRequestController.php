@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\empleavebalances;
 use App\Models\leaverequests;
 use App\Models\Employees;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LeaveRequestController extends Controller
@@ -63,6 +65,8 @@ class LeaveRequestController extends Controller
             return view('employee.employeeleaverequest', compact('leaveRequests'));
         }
     }
+
+
     public function updateStatus(Request $request, $id)
     {
         $validated = $request->validate([
@@ -70,6 +74,37 @@ class LeaveRequestController extends Controller
         ]);
 
         $leaveRequest = leaverequests::findOrFail($id);
+
+        // If the status is being updated to "Approved"
+        if ($validated['status'] === 'Approved') {
+            $employeeId = $leaveRequest->EmployeeID;
+
+            // Fetch the employee's leave balance
+            $leaveBalance = empleavebalances::where('EmployeeID', $employeeId)->first();
+
+            if (!$leaveBalance) {
+                return redirect()->back()->with('error', 'Leave balance record not found.');
+            }
+
+            // Calculate the number of leave days
+            $leaveDays = Carbon::parse($leaveRequest->StartDate)->diffInDays(Carbon::parse($leaveRequest->EndDate)) + 1;
+
+            // Deduct from the appropriate leave balance
+            if ($leaveRequest->LeaveType === 'Vacation Leave') {
+                $leaveBalance->VacationLeave -= $leaveDays;
+            } elseif ($leaveRequest->LeaveType === 'Sick Leave') {
+                $leaveBalance->SickLeave -= $leaveDays;
+            }
+
+            // Ensure the balance does not go below zero
+            $leaveBalance->VacationLeave = max(0, $leaveBalance->VacationLeave);
+            $leaveBalance->SickLeave = max(0, $leaveBalance->SickLeave);
+
+            // Save the updated leave balance
+            $leaveBalance->save();
+        }
+
+        // Update the leave request status
         $leaveRequest->Status = $validated['status'];
         $leaveRequest->save();
 

@@ -28,7 +28,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="denied-tab" data-bs-toggle="tab" data-bs-target="#denied" type="button" role="tab">
-                        Denied <span class="badge bg-danger">{{ $leaveRequests->where('Status', 'Denied')->count() }}</span>
+                        Rejected <span class="badge bg-danger">{{ $leaveRequests->where('Status', 'Denied')->count() }}</span>
                     </button>
                 </li>
             </ul>
@@ -39,8 +39,17 @@
                 <div class="tab-pane fade show active" id="pending" role="tabpanel">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered" id="pendingTable">
+                            <colgroup>
+                                <col style="width:1% ;">
+                                <col style="width: 15% ;">
+                                <col style="width:10% ;">
+                                <col style="width:10% ;">
+                                <col style="width:10% ;">
+                                <col style="width:25% ;">
+                                <col style="width: 12% ;">
+                                </colgroup>
                             <thead>
-                                <tr>
+                                <tr class="table-primary">
                                     <th>ID</th>
                                     <th>Employee</th>
                                     <th>Leave Type</th>
@@ -68,7 +77,7 @@
                                             <form action="{{ route('leaverequests.status.update', $request->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 <input type="hidden" name="status" value="Denied">
-                                                <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                                             </form>
 
                                         </td>
@@ -87,15 +96,24 @@
                 <div class="tab-pane fade" id="approved" role="tabpanel">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered" id="approvedTable">
+                            <colgroup>
+                                <col style="width:1% ;">
+                                <col style="width: 15% ;">
+                                <col style="width:10% ;">
+                                <col style="width:10% ;">
+                                <col style="width:10% ;">
+                                <col style="width:25% ;">
+                                <col style="width: 12% ;">
+                                </colgroup>
                             <thead>
-                                <tr>
+                                <tr class="table-primary">
                                     <th>ID</th>
                                     <th>Employee</th>
                                     <th>Leave Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Reason</th>
-                                    <th>Approved Date</th>
+                                    <th>Rejected Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -123,15 +141,24 @@
                 <div class="tab-pane fade" id="denied" role="tabpanel">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered" id="deniedTable">
+                            <colgroup>
+                                <col style="width:1% ;">
+                                <col style="width: 15% ;">
+                                <col style="width:10% ;">
+                                <col style="width:10% ;">
+                                <col style="width:10% ;">
+                                <col style="width:25% ;">
+                                <col style="width: 12% ;">
+                                </colgroup>
                             <thead>
-                                <tr>
+                                <tr class="table-primary">
                                     <th>ID</th>
                                     <th>Employee</th>
                                     <th>Leave Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Reason</th>
-                                    <th>Denied Date</th>
+                                    <th>Rejected Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -147,7 +174,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No denied requests</td>
+                                        <td colspan="6" class="text-center">No Rejected requests</td>
                                     </tr>
                                 @endforelse
                             </tbody>

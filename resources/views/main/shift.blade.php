@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
         <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/shift.css') }}">
+
         <title>Shifts</title>
     </head>
 

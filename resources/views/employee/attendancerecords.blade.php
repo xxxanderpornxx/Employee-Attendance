@@ -36,8 +36,15 @@
             </div>
             <div class="card-body">
                 <table class="table table-striped table-bordered table-hover w-100" id="attendanceTable">
+                    <colgroup>
+                    <col style="width: 5%;">
+                    <col style="width: 10%;">
+                    <col style="width: 10%;">
+                    <col style="width: 30%;">
+                    <col style="width: 14%;">
+                    </colgroup>
                     <thead class="thead-dark">
-                        <tr>
+                        <tr class="table-primary">
                             <th>ID</th>
                             <th>Type</th>
                             <th>Status</th>
@@ -81,9 +88,10 @@
         $(document).ready(function() {
             // Initialize the date range picker
             $('#daterange').daterangepicker({
-                startDate: moment().subtract(29, 'days'),
-                endDate: moment(),
+                startDate: moment().startOf('week'),
+                endDate: moment().endOf('week'),
                 ranges: {
+                    'This Week': [moment().startOf('week'), moment().endOf('week')],
                     'Today': [moment(), moment()],
                     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                     'Last 7 Days': [moment().subtract(6, 'days'), moment()],

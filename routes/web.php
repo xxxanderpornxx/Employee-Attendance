@@ -12,6 +12,7 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\EmployeeshiftController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\OvertimeRequestController;
+use App\Http\Controllers\PayrollController;
 
 Route::get('/', function () {
     return redirect('/login');
@@ -110,8 +111,7 @@ Route::middleware(['auth:employee', 'role:admin'])->group(function () {
 
 
     // payroll routes
+    Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
+    Route::post('/payroll/generate', [PayrollController::class, 'generatePayroll'])->name('payroll.generate');
 
-    Route::get('/payroll', function () {
-        return view('main.payroll');
-    })->name('payroll');
 });

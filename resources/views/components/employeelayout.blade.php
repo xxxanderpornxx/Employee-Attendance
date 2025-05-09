@@ -21,8 +21,9 @@
             <nav>
                 <ul class="navlinks">
                     <li><a href="{{ route('employee.profile') }}">Profile</a></li>
-                    <li><a href="{{ route('employee.attendancerecords') }}">Attendance Logs</a></li>
+
                     <li><a href="{{ route('employee.employeeleaverequest') }}">Request</a></li>
+                    <li><a href="{{ route('employee.attendancerecords') }}">Attendance Logs</a></li>
                     {{-- <!-- <li><a href="{{ route('employee.payroll') }}">Payroll Logs</a></li> --> --}}
                 </ul>
             </nav>
