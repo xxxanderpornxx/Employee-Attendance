@@ -9,6 +9,7 @@
     </head>
 
     <div class="col-12">
+        <h1>Role</h1>
         <div class="row p-3 pb-2 align-items-center">
             <div class="col">
                 <h1 class="pb-3">Shifts</h1>

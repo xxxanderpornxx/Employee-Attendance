@@ -14,10 +14,10 @@ class AttendanceSeeder extends Seeder
         // Seed attendance records for existing employees
         Attendances::insert([
             // Attendance for EmployeeID = 2
-            ['EmployeeID' => 8	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-05 08:00:00'],
-            ['EmployeeID' => 8	, 'Type' => 'Check-out', 'DateTime' => '2025-05-05 12:00:00'],
-            ['EmployeeID' => 8	, 'Type' => 'Check-in', 'DateTime' => '2025-05-05 13:30:00'],
-            ['EmployeeID' => 8	, 'Type' => 'Check-out', 'DateTime' => '2025-05-05 17:30:00'],
+            ['EmployeeID' => 8	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-11 08:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 8	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-11 12:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 8	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-11 13:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 8	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-11 17:30:00', 'Remarks'=> 'On time'],
 
 
 
@@ -25,7 +25,7 @@ class AttendanceSeeder extends Seeder
 
         // Process attendance records to update leave balances for each employee
         $employeeIds = [8]; // IDs of existing employees
-        $today = '2025-05-05';
+        $today = '2025-05-11';
 
         foreach ($employeeIds as $employeeId) {
             $employee = Employees::find($employeeId);

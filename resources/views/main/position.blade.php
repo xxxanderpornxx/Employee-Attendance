@@ -19,8 +19,8 @@
             <div class="row">
                 <!-- Position Table -->
                 <div class="col-md-6">
-                    <h2 class="text-center mb-3">Position</h2>
-                    <div class="text-center mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="mb-0">Position</h2>
                         <!-- Add Button for Position -->
                         <button class="addbutton" data-bs-toggle="modal" data-bs-target="#addPositionModal">
                             <i class="bi bi-plus"></i> Add Position
@@ -89,13 +89,14 @@
 
                 <!-- Department Table -->
                 <div class="col-md-6">
-                    <h2 class="text-center mb-3">Department</h2>
-                    <div class="text-center mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="mb-0">Department</h2>
                         <!-- Add Button for Department -->
                         <button class="addbutton" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">
                             <i class="bi bi-plus"></i> Add Department
                         </button>
                     </div>
+
                     <div class="card">
                         <div class="card-body">
                             <!-- Scrollable Table -->

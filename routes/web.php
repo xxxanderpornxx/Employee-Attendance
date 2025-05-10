@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeschedulesController;
 use App\Http\Middleware\RoleMiddleware;
@@ -46,9 +47,8 @@ Route::middleware(['auth:employee', 'role:employee'])->group(function () {
 
 // Admin Routes - access to views/main folder
 Route::middleware(['auth:employee', 'role:admin'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('main.dashboard');
-    })->name('dashboard');
+
+ Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
 
     // Employee routes
     Route::get('/employee', [EmployeeController::class, 'index'])->name('Employees.index');
