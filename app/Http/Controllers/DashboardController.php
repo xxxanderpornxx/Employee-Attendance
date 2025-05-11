@@ -9,12 +9,10 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function getDashboardData()
+    public function index()
     {
         $totalEmployees = Employees::count();
-
-
-          // Calculate today's attendance
+      // Calculate today's attendance
         $today = Carbon::today();
         $totalAttendance = Attendances::whereDate('DateTime', $today)
         ->where('Type', 'Check-in')
@@ -48,5 +46,4 @@ class DashboardController extends Controller
     ));
 
 }
-
 }

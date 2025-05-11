@@ -2,31 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="{{ asset('css/loginlayout.css') }}">
+    <title>Register</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: rgb(200, 237, 232) url('{{ asset('images/logo1.png') }}') no-repeat center center;
+            background-size: 100%;
+            background-blend-mode: overlay;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
 </head>
 <body>
-<header class="navbar">
-    <div class="logo">
-        <img src="{{ asset('images/logo.jpg') }}" alt="Company Logo" class="logo-img">
-    </div>
-    <div>
-        <h1>
-            Employee Attendance System
-        </h1>
-    </div>
-    <ul>
-        <li class="right"><a href="/register">Register</a></li>
-        <li class="right"><a href="/login">Log in</a></li>
-    </ul>
-</header>
-
-<main class="">
-    {{ $slot }}
-</main>
+    <main>
+        {{ $slot }}
+    </main>
 </body>
 </html>
-
-

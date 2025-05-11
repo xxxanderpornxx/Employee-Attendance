@@ -1,19 +1,107 @@
 <x-loginlayout>
     <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: rgb(200, 237, 232) url('/images/logo2.png') no-repeat center center;
+            background-size: cover;
+            background-blend-mode: overlay;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
+        button[type="submit"] {
+            background-color: #009688;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #00796b;
+        }
+
+        .alert {
+            margin-top: 1rem;
+            color: red;
+        }
+
+        .container {
+            background: rgb(175, 236, 227);
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 100%;
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form div {
+            margin-bottom: 0.75rem;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #e0f2f1;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .row > div {
+            flex: 1;
+        }
+    </style>
 
     <div class="container">
         <form method="POST" action="{{ route('register.create') }}">
             @csrf
-
-            <div>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+            <h2></h2>
+            <div class="avatar">EAS</div>
+            <div class="row">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
             </div>
             <div>
                 <label for="role">Role:</label>
@@ -32,16 +120,18 @@
                 <label for="password_confirmation">Confirm Password:</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" required>
             </div>
+
             <button type="submit">Register</button>
+
             @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-@endif
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </form>
     </div>
 </x-loginlayout>

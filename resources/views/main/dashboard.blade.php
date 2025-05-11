@@ -48,11 +48,11 @@
                             <h5 class="card-title">Pending Requests</h5>
                             <hr>
                             <a href="/leaverequests" class="text-decoration-none text-dark">
-                                <p class="card-text display-6">Leave: {{ $pendingLeaveRequests }}</p>
+                                <p class="card-text display-6"><strong>Leave: {{ $pendingLeaveRequests }}</p></strong>
                             </a>
                             <br>
                             <a href="/overtimerequests" class="text-decoration-none text-dark">
-                                <p class="card-text display-6">Overtime: {{ $pendingOvertimeRequests }}</p>
+                                <p class="card-text display-6"><strong>Overtime:{{ $pendingOvertimeRequests }}</p></strong>
                             </a>
                         </div>
                     </div>

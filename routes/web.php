@@ -48,7 +48,7 @@ Route::middleware(['auth:employee', 'role:employee'])->group(function () {
 // Admin Routes - access to views/main folder
 Route::middleware(['auth:employee', 'role:admin'])->group(function () {
 
- Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('main.dashboard');
 
     // Employee routes
     Route::get('/employee', [EmployeeController::class, 'index'])->name('Employees.index');
