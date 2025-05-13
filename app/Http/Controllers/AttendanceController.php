@@ -277,34 +277,27 @@ namespace App\Http\Controllers;
 
     // Mark absent employees who have no check-in record for today
 public function markAbsentEmployees()
-{
-    try {
+{        try {
         $today = Carbon::now()->format('Y-m-d');
         $dayOfWeek = Carbon::now()->format('l');
         $currentTime = Carbon::now();
         $markedCount = 0;
-
-
-
         // Get all employees scheduled for today
         $employees = Employees::whereHas('schedules', function($query) use ($dayOfWeek) {
             $query->where('DayOfWeek', $dayOfWeek);
         })->get();
-
         foreach ($employees as $employee) {
             // Check if there's any check-in record for today
             $hasCheckin = Attendances::where('EmployeeID', $employee->id)
                 ->whereDate('DateTime', $today)
                 ->where('Type', 'Check-in')
                 ->exists();
-
             // Check if already marked absent
             $alreadyMarkedAbsent = Attendances::where('EmployeeID', $employee->id)
                 ->whereDate('DateTime', $today)
                 ->where('Type', 'Auto-marked')
                 ->where('Status', 'Absent')
                 ->exists();
-
             // If no check-in and not already marked absent, mark as absent
             if (!$hasCheckin && !$alreadyMarkedAbsent) {
                 Attendances::create([
@@ -314,7 +307,6 @@ public function markAbsentEmployees()
                     'Remarks' => 'Auto-marked absent - No check-in record for the day',
                     'DateTime' => Carbon::now()->endOfDay(),
                 ]);
-
                 $markedCount++;
             }
         }

@@ -14,18 +14,48 @@ class AttendanceSeeder extends Seeder
         // Seed attendance records for existing employees
         Attendances::insert([
             // Attendance for EmployeeID = 2
-            ['EmployeeID' => 8	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-11 08:00:00', 'Remarks'=> 'On time'],
-            ['EmployeeID' => 8	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-11 12:00:00', 'Remarks'=> 'On time'],
-            ['EmployeeID' => 8	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-11 13:30:00', 'Remarks'=> 'On time'],
-            ['EmployeeID' => 8	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-11 17:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 1	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 08:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 1	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 12:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 1	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 13:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 1	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 17:30:00', 'Remarks'=> 'On time'],
+
+            ['EmployeeID' => 2	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 08:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 2	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 12:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 2	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 13:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 2	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 17:30:00', 'Remarks'=> 'On time'],
+
+            ['EmployeeID' => 3	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 08:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 3	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 12:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 3	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 13:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 3	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 17:30:00', 'Remarks'=> 'On time'],
+
+            ['EmployeeID' => 4	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 08:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 4	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 12:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 4	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 13:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 4	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 17:30:00', 'Remarks'=> 'On time'],
+
+            ['EmployeeID' => 5	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 08:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 5	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 12:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 5	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 13:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 5	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 17:30:00', 'Remarks'=> 'On time'],
+
+            ['EmployeeID' => 5	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 08:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 5	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 12:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 5	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 13:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 5	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 17:30:00', 'Remarks'=> 'On time'],
+
+            ['EmployeeID' => 8	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 08:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 8	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 12:00:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 8	  , 'Type' => 'Check-in', 'DateTime' => '2025-05-7 13:30:00', 'Remarks'=> 'On time'],
+            ['EmployeeID' => 8	  , 'Type' => 'Check-out', 'DateTime' => '2025-05-7 17:30:00', 'Remarks'=> 'On time'],
 
 
 
         ]);
 
         // Process attendance records to update leave balances for each employee
-        $employeeIds = [8]; // IDs of existing employees
-        $today = '2025-05-11';
+        $employeeIds = [1, 2, 3, 4, 5, 8]; // IDs of existing employees
+        $today = '2025-05-7';
 
         foreach ($employeeIds as $employeeId) {
             $employee = Employees::find($employeeId);

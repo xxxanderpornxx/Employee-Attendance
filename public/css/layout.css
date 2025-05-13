@@ -49,7 +49,7 @@ li a {
 }
 
 li a:hover {
-    background-color: #2a94a3; /* Hover color */
+    background-color: #007ec2; /* Hover color */
     color: #e0f7fa; /* Slightly lighter text on hover */
 }
 

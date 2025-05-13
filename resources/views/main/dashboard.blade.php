@@ -126,9 +126,10 @@
                         y: {
                             title: {
                                 display: true,
-                                text: 'Number of Employees'
+                                text: 'Total Employees'
                             },
-                            beginAtZero: true
+                            beginAtZero: true,
+                            suggestedMax: Math.max(...data) + 2 // Optional: add some headroom above max
                         }
                     }
                 }
