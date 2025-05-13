@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM8e+z5l5c5e5f5e5f5e5f5e5f5e5f5e5f5e" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
   <body>
     <x-layout>
@@ -30,7 +32,7 @@
                         <i class="bi bi-printer"></i> Print
                     </button>
 
-                    <button class="align-start end float-end btn btn-info text-white " id="generatePayrollButton">Generate</button>
+                    <button class="align-start end float-end btn btn-primary text-white " id="generatePayrollButton">Generate</button>
 
                 </div>
                 <div class="mb-3">
@@ -179,25 +181,66 @@
             },
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message);
-                location.reload(); // Reload the page to update the payroll table
-            } else {
-                alert(data.message || 'Failed to generate payroll.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while generating payroll.');
-        });
+
+
+
     });
   });
   $(document).ready(function () {
     $('#payrollTable').DataTable({
         autoWidth: false, // Disable automatic width calculation
 
+    });
+});
+document.getElementById('generatePayrollButton').addEventListener('click', function () {
+    const form = document.getElementById('generatePayrollForm');
+    const formData = new FormData(form);
+
+    // Show loading state
+    Swal.fire({
+        title: 'Generating Payroll...',
+        text: 'Please wait while we process the data.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    fetch('{{ route('payroll.generate') }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: data.message,
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message || 'Failed to generate payroll.'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while generating payroll.'
+        });
     });
 });
     </script>

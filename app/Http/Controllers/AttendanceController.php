@@ -25,11 +25,6 @@ namespace App\Http\Controllers;
             try {
                 $qrCode = $request->input('qrCode');
 
-                // Validate QR code input
-                if (!$qrCode) {
-                    return response()->json(['message' => 'QR code is required.'], 400);
-                }
-
                 // Find the employee by QR code
                 $employee = Employees::where('QRcode', $qrCode)->first();
                 if (!$employee) {
@@ -281,44 +276,64 @@ namespace App\Http\Controllers;
         }
 
     // Mark absent employees who have no check-in record for today
-    public function markAbsentEmployees()
-    {
+public function markAbsentEmployees()
+{
+    try {
         $today = Carbon::now()->format('Y-m-d');
-        $dayOfWeek = Carbon::now()->format('l'); // e.g., "Monday"
+        $dayOfWeek = Carbon::now()->format('l');
+        $currentTime = Carbon::now();
+        $markedCount = 0;
 
-        // Get all employees scheduled to work today
-        $scheduledEmployees = Employees::whereHas('schedules', function ($query) use ($dayOfWeek) {
+
+
+        // Get all employees scheduled for today
+        $employees = Employees::whereHas('schedules', function($query) use ($dayOfWeek) {
             $query->where('DayOfWeek', $dayOfWeek);
         })->get();
 
-        foreach ($scheduledEmployees as $employee) {
-            // Check if the employee has a check-in record for today
-            $hasCheckIn = Attendances::where('EmployeeID', $employee->id)
+        foreach ($employees as $employee) {
+            // Check if there's any check-in record for today
+            $hasCheckin = Attendances::where('EmployeeID', $employee->id)
                 ->whereDate('DateTime', $today)
                 ->where('Type', 'Check-in')
                 ->exists();
 
-            // If no check-in record exists, mark the employee as absent
-            if (!$hasCheckIn) {
-                // Get the employee's shift for today
-                $schedule = $employee->schedules()
-                    ->where('DayOfWeek', $dayOfWeek)
-                    ->with('shift')
-                    ->first();
+            // Check if already marked absent
+            $alreadyMarkedAbsent = Attendances::where('EmployeeID', $employee->id)
+                ->whereDate('DateTime', $today)
+                ->where('Type', 'Auto-marked')
+                ->where('Status', 'Absent')
+                ->exists();
 
-                if ($schedule) {
-                    Attendances::create([
-                        'EmployeeID' => $employee->id,
-                        'Type' => 'Auto-marked',
-                        'Status' => 'Absent',
-                        'Remarks' => 'Automatically marked absent - No check-in record',
-                        'DateTime' => Carbon::parse($today . ' ' . $schedule->shift->EndTime),
-                    ]);
-                }
+            // If no check-in and not already marked absent, mark as absent
+            if (!$hasCheckin && !$alreadyMarkedAbsent) {
+                Attendances::create([
+                    'EmployeeID' => $employee->id,
+                    'Type' => 'Auto-marked',
+                    'Status' => 'Absent',
+                    'Remarks' => 'Auto-marked absent - No check-in record for the day',
+                    'DateTime' => Carbon::now()->endOfDay(),
+                ]);
+
+                $markedCount++;
             }
         }
 
-        return response()->json(['message' => 'Absent employees marked successfully.']);
-    }
+        $message = $markedCount > 0
+            ? "Successfully marked {$markedCount} employees as absent."
+            : "No employees to mark as absent.";
 
+        return [
+            'success' => true,
+            'message' => $message,
+            'marked_count' => $markedCount
+        ];
+
+    } catch (\Exception $e) {
+        return [
+            'success' => false,
+            'message' => "Error marking absent employees: " . $e->getMessage()
+        ];
+    }
+}
     }

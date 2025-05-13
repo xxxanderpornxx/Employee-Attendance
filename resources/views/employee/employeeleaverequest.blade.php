@@ -6,6 +6,8 @@
     <title>Employee Leave & Overtime Requests</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -211,28 +213,108 @@
         </div>
 
         {{-- Add date validation script --}}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Validate leave request dates
-                const startDate = document.getElementById('start_date');
-                const endDate = document.getElementById('end_date');
-
-                startDate.addEventListener('change', function() {
-                    endDate.min = this.value;
-                });
-
-                // Validate overtime times
-                const startTime = document.getElementById('start_time');
-                const endTime = document.getElementById('end_time');
-
-                endTime.addEventListener('change', function() {
-                    if(startTime.value && this.value <= startTime.value) {
-                        alert('End time must be after start time');
-                        this.value = '';
-                    }
-                });
+     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show success messages
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                timer: 1500,
+                showConfirmButton: false
             });
-        </script>
+        @endif
+
+        // Show validation errors
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: '<ul class="list-unstyled">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>'
+            });
+        @endif
+
+        // Form submissions
+        const leaveForm = document.querySelector('#leaveModal form');
+        const overtimeForm = document.querySelector('#overtimeModal form');
+
+        leaveForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Submitting Leave Request...',
+                text: 'Please wait...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    this.submit();
+                }
+            });
+        });
+
+        overtimeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Submitting Overtime Request...',
+                text: 'Please wait...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    this.submit();
+                }
+            });
+        });
+
+        // Replace alert with SweetAlert for date/time validation
+        const startDate = document.getElementById('start_date');
+        const endDate = document.getElementById('end_date');
+        const startTime = document.getElementById('start_time');
+        const endTime = document.getElementById('end_time');
+
+        startDate.addEventListener('change', function() {
+            endDate.min = this.value;
+        });
+
+        endTime.addEventListener('change', function() {
+            if(startTime.value && this.value <= startTime.value) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Time',
+                    text: 'End time must be after start time',
+                    confirmButtonColor: '#3085d6'
+                });
+                this.value = '';
+            }
+        });
+    });
+
+    // Add custom styling for SweetAlert
+    const style = document.createElement('style');
+    style.textContent = `
+        .swal2-popup {
+            font-size: 1.2rem;
+            border-radius: 15px;
+        }
+        .swal2-title {
+            font-size: 1.8rem;
+            color: #333;
+        }
+        .swal2-html-container {
+            font-size: 1.1rem;
+        }
+        .swal2-confirm, .swal2-cancel {
+            padding: 12px 24px !important;
+            font-size: 1.1rem !important;
+        }
+        .swal2-icon {
+            width: 5em !important;
+            height: 5em !important;
+        }
+    `;
+    document.head.appendChild(style);
+</script>
     </x-employeelayout>
 </body>
 </html>

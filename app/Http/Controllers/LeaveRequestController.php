@@ -108,7 +108,20 @@ class LeaveRequestController extends Controller
         $leaveRequest->Status = $validated['status'];
         $leaveRequest->save();
 
-        return redirect()->route('leaverequests.index')
-            ->with('success', 'Leave request status updated successfully.');
+       try {
+        $leaveRequest = leaverequests::findOrFail($id);
+        $leaveRequest->Status = $request->status;
+        $leaveRequest->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Leave request status updated successfully'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update leave request status'
+        ], 500);
     }
+}
 }

@@ -90,32 +90,32 @@ class EmployeeController extends Controller
             'role' => 'Employee', // Default role, you can customize this
             'password' => Hash::make('12345678'), // Hash the default password
         ]);
-        return redirect()->route('Employees.index')->with('success', 'Employee created successfully with QR code!');
+    return redirect()->route('Employees.index')->with('success', 'Employee created successfully!');
     }
 
     /**
      * Show the specified resource.
      */
-    public function show(string $id)
-    {
-        // Fetch the employee by ID
-        $employee = \App\Models\Employees::with(['position', 'department'])->findOrFail($id);
+    // public function show(string $id)
+    // {
+    //     // Fetch the employee by ID
+    //     $employee = \App\Models\Employees::with(['position', 'department'])->findOrFail($id);
 
-        // Pass the employee to the view
-        return view('main.employee', compact('employee'));
-    }
+    //     // Pass the employee to the view
+    //     return view('main.employee', compact('employee'));
+    // }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        // Fetch the employee by ID
-        $employee = \App\Models\Employees::with(['position', 'department'])->findOrFail($id);
+    // public function edit(string $id)
+    // {
+    //     // Fetch the employee by ID
+    //     $employee = \App\Models\Employees::with(['position', 'department'])->findOrFail($id);
 
-        // Pass the employee to the edit view
-        return view('main.employee', compact('employee'));
-    }
+    //     // Pass the employee to the edit view
+    //     return view('main.employee', compact('employee'));
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -144,7 +144,7 @@ class EmployeeController extends Controller
         $employee->fill($request->all());
         $employee->save(); // Save the updated employee to the database
 
-        return redirect()->route('Employees.index')->with('success', 'Employee updated successfully.');
+    return redirect()->route('Employees.index')->with('success', 'Employee updated successfully!');
     }
 
     /**
@@ -157,7 +157,7 @@ class EmployeeController extends Controller
         $employee->delete();
 
         // Redirect back with a success message
-        return redirect()->route('Employees.index')->with('success', 'Employee deleted successfully.');
+    return redirect()->route('Employees.index')->with('success', 'Employee deleted successfully!');
     }
 
     public function generateQrCode(Request $request)

@@ -106,10 +106,8 @@
             <div>
                 <label for="role">Role:</label>
                 <select id="role" name="role" required>
-                    <option value="hr">HR</option>
-                    <option value="manager">Manager</option>
-                    <option value="admin">Admin</option>
-                    <option value="employee">Employee</option>
+                   <option value="employee">Employee</option>
+                   <option value="admin">Admin</option>
                 </select>
             </div>
             <div>
@@ -122,6 +120,7 @@
             </div>
 
             <button type="submit">Register</button>
+            <p>Already have an account? <a href="{{ route('login') }}">Login</a></p>
 
             @if ($errors->any())
                 <div class="alert alert-danger">

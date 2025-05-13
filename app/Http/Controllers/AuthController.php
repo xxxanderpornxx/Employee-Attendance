@@ -8,9 +8,24 @@ use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
-    public function showLogin() {
-        return view('Login.login'); // Correct the path to match your file structure
+public function showLogin() {
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        $user = Auth::user();
+
+        // Redirect based on role
+        if ($user->role === 'employee') {
+            return redirect()->route('employee.profile');
+        }
+
+        if ($user->role === 'admin') {
+            return redirect()->route('main.dashboard');
+        }
     }
+
+    // If not authenticated, show the login page
+    return view('Login.login'); // Ensure the path matches your file structure
+}
 
     public function register(Request $request) {
         $request->validate([
@@ -30,6 +45,18 @@ class AuthController extends Controller
         return redirect('/login')->with('success', 'Registered successfully. Please login.');
     }
     public function showRegister() {
+            if (Auth::check()) {
+        $user = Auth::user();
+
+        // Redirect based on role
+        if ($user->role === 'employee') {
+            return redirect()->route('employee.profile');
+        }
+
+        if ($user->role === 'admin') {
+            return redirect()->route('main.dashboard');
+        }
+    }
         return view('Login.register'); // Adjust the path to match your file structure
     }
 
@@ -51,8 +78,8 @@ class AuthController extends Controller
             }
         }
 
-        // If authentication fails
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+           // If authentication fails, flash an error message
+    return view('Login.login'); // Correct the path to match your file structure
     }
 
 

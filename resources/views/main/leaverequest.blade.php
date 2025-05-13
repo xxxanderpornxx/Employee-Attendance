@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
     <x-layout>
@@ -69,17 +71,14 @@
                                         <td>{{ \Carbon\Carbon::parse($request->EndDate)->format('M d, Y') }}</td>
                                         <td>{{ $request->Reason }}</td>
                                         <td>
-                                            <form action="{{ route('leaverequests.status.update', $request->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="status" value="Approved">
-                                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                                            </form>
-                                            <form action="{{ route('leaverequests.status.update', $request->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="status" value="Denied">
-                                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
-                                            </form>
-
+                                            <button onclick="updateStatus({{ $request->id }}, 'Approved', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
+                                                    class="btn btn-success btn-sm">
+                                                Approve
+                                            </button>
+                                            <button onclick="updateStatus({{ $request->id }}, 'Denied', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
+                                                    class="btn btn-danger btn-sm">
+                                                Reject
+                                            </button>
                                         </td>
                                     </tr>
                                 @empty
@@ -196,6 +195,99 @@
                 });
             });
         </script>
+        <script>
+function updateStatus(id, status, employeeName) {
+    const action = status === 'Approved' ? 'approve' : 'reject';
+    const icon = status === 'Approved' ? 'success' : 'warning';
+    const buttonColor = status === 'Approved' ? '#198754' : '#dc3545';
+
+    Swal.fire({
+        title: `Are you sure?`,
+        text: `Do you want to ${action} ${employeeName}'s leave request?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: buttonColor,
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: `Yes, ${action} it!`,
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            Swal.fire({
+                title: 'Processing...',
+                html: `${action.charAt(0).toUpperCase() + action.slice(1)}ing leave request`,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Send the request
+            fetch(`/leaverequests/${id}/status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ status: status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: icon,
+                        title: 'Success!',
+                        text: `Leave request ${action}ed successfully!`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        // Reload the page to update the tables
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.message || 'Something went wrong!'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'An error occurred while processing the request.'
+                });
+            });
+        }
+    });
+}
+
+// Add custom styling for SweetAlert
+const style = document.createElement('style');
+style.textContent = `
+    .swal2-popup {
+        font-size: 1.2rem;
+        border-radius: 15px;
+    }
+    .swal2-title {
+        font-size: 1.8rem;
+        color: #333;
+    }
+    .swal2-html-container {
+        font-size: 1.1rem;
+    }
+    .swal2-confirm {
+        padding: 12px 24px !important;
+        font-size: 1.1rem !important;
+    }
+    .swal2-cancel {
+        padding: 12px 24px !important;
+        font-size: 1.1rem !important;
+    }
+`;
+document.head.appendChild(style);
+</script>
     </x-layout>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

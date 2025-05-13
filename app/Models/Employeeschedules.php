@@ -21,4 +21,5 @@ class Employeeschedules extends Model
     {
         return $this->belongsTo(shifts::class, 'ShiftID');
     }
+
 }

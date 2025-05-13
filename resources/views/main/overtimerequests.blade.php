@@ -7,6 +7,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 </head>
 <body>
@@ -66,18 +68,16 @@
                                             <td>{{ \Carbon\Carbon::parse($request->StartTime)->format('h:i A') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($request->EndTime)->format('h:i A') }}</td>
                                             <td>
-                                                <form action="{{ route('overtimerequests.status.update', $request->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    <input type="hidden" name="status" value="Approved">
-                                                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                                                </form>
-                                                <form action="{{ route('overtimerequests.status.update', $request->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    <input type="hidden" name="status" value="Rejected">
-                                                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
-                                                </form>
+                                                <button onclick="updateOvertimeStatus({{ $request->id }}, 'Approved', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
+                                                        class="btn btn-success btn-sm">
+                                                    Approve
+                                                </button>
+                                                <button onclick="updateOvertimeStatus({{ $request->id }}, 'Rejected', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
+                                                        class="btn btn-danger btn-sm">
+                                                    Reject
+                                                </button>
                                             </td>
-                                        </tr>
+                                                                                    </tr>
                                     @empty
                                         <tr>
                                             <td colspan="6" class="text-center">No pending requests</td>
@@ -203,6 +203,94 @@
                     });
                 });
             });
+
+            function updateOvertimeStatus(id, status, employeeName) {
+    const action = status === 'Approved' ? 'approve' : 'reject';
+    const icon = status === 'Approved' ? 'success' : 'warning';
+    const buttonColor = status === 'Approved' ? '#198754' : '#dc3545';
+
+    Swal.fire({
+        title: `Confirm ${action}?`,
+        html: `Do you want to ${action} the overtime request for<br><strong>${employeeName}</strong>?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: buttonColor,
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: `Yes, ${action}!`,
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            Swal.fire({
+                title: 'Processing...',
+                html: `${action.charAt(0).toUpperCase() + action.slice(1)}ing overtime request`,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('status', status);
+
+            // Send request
+            fetch(`/overtimerequests/${id}/status`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: `Overtime request has been ${action}ed!`,
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    throw new Error(data.message || 'Something went wrong');
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message || 'Failed to process the request'
+                });
+            });
+        }
+    });
+}
+
+// Add custom styling for SweetAlert
+const style = document.createElement('style');
+style.textContent = `
+    .swal2-popup {
+        font-size: 1.2rem;
+        border-radius: 15px;
+    }
+    .swal2-title {
+        font-size: 1.8rem;
+        color: #333;
+    }
+    .swal2-html-container {
+        font-size: 1.1rem;
+    }
+    .swal2-confirm, .swal2-cancel {
+        padding: 12px 24px !important;
+        font-size: 1.1rem !important;
+    }
+    .swal2-icon {
+        width: 5em !important;
+        height: 5em !important;
+    }
+`;
+document.head.appendChild(style);
         </script>
     </x-layout>
 

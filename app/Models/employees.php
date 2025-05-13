@@ -64,14 +64,13 @@ class Employees extends Model
     /**
      * Define the relationship with the EmployeeShift model.
      */
-    public function employeeshift()
-    {
-        return $this->hasOne(Employeeshifts::class, 'EmployeeID');
-    }
+
 
     public function shifts()
     {
-        return $this->belongsToMany(Shifts::class, 'employeeshifts', 'EmployeeID', 'ShiftID');
+     return $this->belongsToMany(shifts::class, 'employee_schedules', 'EmployeeID', 'ShiftID')
+                ->withPivot('DayOfWeek')
+                ->withTimestamps();
     }
     public function schedules()
     {

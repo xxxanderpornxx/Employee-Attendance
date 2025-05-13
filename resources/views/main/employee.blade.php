@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>
@@ -67,15 +67,21 @@
                                         <td>{{ $employee->id }}</td>
                                         <td>{{ $employee->FirstName . ' ' . ($employee->MiddleName ? substr($employee->MiddleName, 0, 1) . '.' : '') . ' ' . $employee->LastName }}</td>
                                         <td>{{ $employee->position && $employee->department ? $employee->department->DepartmentName : 'N/A' }} | {{ $employee->position ? $employee->position->PositionName : 'N/A' }}</td>
-                                        <td>
-                                            @if ($employee->shifts && $employee->shifts->count() > 0)
-                                                @foreach ($employee->shifts as $shift)
-                                                    <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->StartTime)->format('h:i A') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->EndTime)->format('h:i A') }}</div>
-                                                @endforeach
-                                            @else
-                                                N/A
-                                            @endif
-                                        </td>
+<td>
+    @if ($employee->shifts && $employee->shifts->count() > 0)
+        @php
+            $uniqueShifts = $employee->shifts->unique(function($shift) {
+                return $shift->StartTime . '-' . $shift->EndTime;
+            });
+        @endphp
+        @foreach ($uniqueShifts as $shift)
+            <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->StartTime)->format('h:i A') }} -
+                 {{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->EndTime)->format('h:i A') }}</div>
+        @endforeach
+    @else
+        N/A
+    @endif
+</td>
                                         <td>{{ $employee->Sex ?? 'N/A' }}</td>
                                         <td>{{ $employee->DateOfBirth ? (int) \Carbon\Carbon::createFromFormat('Y-m-d', $employee->DateOfBirth)->diffInYears(now()) : 'N/A' }}</td>
                                         <td>{{ $employee->Address }}</td>
@@ -86,10 +92,10 @@
                                             </button>
 
                                             <!-- Delete Button -->
-                                            <form method="POST" action="{{ route('Employees.destroy', $employee->id) }}" style="display: inline;">
+                                           <form id="delete-form-{{ $employee->id }}" method="POST" action="{{ route('Employees.destroy', $employee->id) }}" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?');">
+                                                <button type="button" class="btn btn-danger" onclick="confirmDelete('delete-form-{{ $employee->id }}')">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
@@ -603,6 +609,63 @@
                     }
                 });
             });
+                // Show success message
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '{{ session('success') }}',
+            timer: 3000,
+            showConfirmButton: false
+        });
+    @endif
+
+    // Confirm delete
+    function confirmDelete(formId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(formId).submit();
+            }
+        });
+    }
+
+    // Add employee success
+    document.querySelector('form[action="{{ route('Employees.store') }}"]').addEventListener('submit', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Saving...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        this.submit();
+    });
+
+    // Edit employee success
+    document.querySelectorAll('form[action^="{{ route('Employees.index') }}/"]').forEach(form => {
+        if (form.method.toLowerCase() === 'post' && form.querySelector('input[name="_method"]')?.value === 'PUT') {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Updating...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                this.submit();
+            });
+        }
+    });
         </script>
     </x-layout>
 

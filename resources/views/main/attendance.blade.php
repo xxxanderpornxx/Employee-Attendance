@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <x-layout>
@@ -17,9 +18,33 @@
         <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <style>
+.swal2-popup {
+    font-size: 1.2rem;
+    border-radius: 15px;
+}
+
+.swal2-title {
+    font-size: 1.8rem;
+    color: #333;
+}
+
+.swal2-html-container {
+    font-size: 1.1rem;
+}
+
+.swal2-success {
+    border: none;
+    box-shadow: 0 0 15px rgba(0,123,255,0.2);
+}
+
+.swal2-error {
+    border: none;
+    box-shadow: 0 0 15px rgba(255,0,0,0.2);
+}
+</style>
     </header>
     <div class="container mt-4">
         <div class="row">
@@ -116,65 +141,88 @@
                         });
 
                         scanner.addListener('scan', function (content) {
-        // Send the QR code to the server
-        fetch('/attendance/process-qr-code', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ qrCode: content })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Server Response:', data); // Log the response for debugging
-                if (data.attendance) {
-                    // Show a success notification
-                    toastr.success(data.message, 'Success', {
-                        positionClass: 'toast-top-right',
-                        timeOut: 3000, // 3 seconds
-                        progressBar: true
-                    });
-
-                    // Dynamically add the new attendance record to the DataTable
-                    table.row.add([
-                        data.attendance.id,
-                        data.employee.id,
-                        `${data.employee.FirstName} ${data.employee.LastName}`,
-                        data.attendance.Type,
-                        data.attendance.Status,
-                        new Date(data.attendance.DateTime).toLocaleString('en-US', { timeZone: 'Asia/Manila' })
-                    ]).draw(false); // Redraw the table without resetting pagination
-
-                    // Update the employee information
-                    document.getElementById('employee-id').textContent = `Employee ID: ${data.employee.id}`;
-                    document.getElementById('employee-fullname').textContent = `Name: ${data.employee.FirstName} ${data.employee.LastName}`;
-                } else {
-                    // Show an error notification
-                    toastr.error(data.message, 'Error', {
-                        positionClass: 'toast-top-right',
-                        timeOut: 3000,
-                        progressBar: true
-                    });
-
-                    // Clear the employee information if there's an error
-                    document.getElementById('employee-id').textContent = '';
-                    document.getElementById('employee-fullname').textContent = '';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('Failed to process the QR code. Please try again.', 'Error', {
-                    positionClass: 'toast-top-right',
-                    timeOut: 3000,
-                    progressBar: true
-                });
-
-                // Clear the employee information if there's an error
-                document.getElementById('employee-id').textContent = '';
-                document.getElementById('employee-fullname').textContent = '';
-            });
+    // Show scanning animation
+    Swal.fire({
+        title: 'Scanning...',
+        html: 'Processing your attendance',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
     });
+
+    // Send the QR code to the server
+    fetch('/attendance/process-qr-code', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ qrCode: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Server Response:', data);
+        if (data.attendance) {
+            // Success Alert
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: data.message,
+                timer: 3000,
+                showConfirmButton: false,
+                backdrop: `
+                    rgba(0,123,255,0.4)
+                    url("/images/check-animation.gif")
+                    center top
+                    no-repeat
+                `
+            });
+
+            // Update the DataTable
+            table.row.add([
+                data.attendance.id,
+                data.employee.id,
+                `${data.employee.FirstName} ${data.employee.LastName}`,
+                data.attendance.Type,
+                data.attendance.Status,
+                new Date(data.attendance.DateTime).toLocaleString('en-US', { timeZone: 'Asia/Manila' })
+            ]).draw(false);
+
+            // Update employee info
+            document.getElementById('employee-id').textContent = `Employee ID: ${data.employee.id}`;
+            document.getElementById('employee-fullname').textContent = `Name: ${data.employee.FirstName} ${data.employee.LastName}`;
+        } else {
+            // Error Alert
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: data.message,
+                showConfirmButton: true,
+                confirmButtonColor: '#3085d6'
+            });
+
+            // Clear employee info
+            document.getElementById('employee-id').textContent = '';
+            document.getElementById('employee-fullname').textContent = '';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Network Error Alert
+        Swal.fire({
+            icon: 'error',
+            title: 'Connection Error',
+            text: 'Failed to process the QR code. Please try again.',
+            showConfirmButton: true,
+            confirmButtonColor: '#3085d6'
+        });
+
+        // Clear employee info
+        document.getElementById('employee-id').textContent = '';
+        document.getElementById('employee-fullname').textContent = '';
+    });
+});
 
                         let isCameraOn = true;
 
@@ -217,6 +265,9 @@
                             isCameraOn = !isCameraOn;
                         });
                     });
+
+
+
                 </script>
         <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
         <script src="bootstrap/js/instascan.min.js"></script>

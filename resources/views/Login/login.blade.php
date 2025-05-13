@@ -90,6 +90,12 @@
     <form method="POST" action="{{ route('login.post') }}">
             @csrf
 
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div>
                 <label for="email">Email: </label>
                 <input type="email" id="email" name="email" required autofocus>

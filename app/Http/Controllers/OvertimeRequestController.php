@@ -49,16 +49,21 @@ public function store(Request $request)
 
 public function updateStatus(Request $request, $id)
 {
-    $validated = $request->validate([
-        'status' => 'required|in:Approved,Rejected'
-    ]);
+    try {
+        $overtimeRequest = overtimerequests::findOrFail($id);
+        $overtimeRequest->Status = $request->status;
+        $overtimeRequest->save();
 
-    $overtimeRequest = overtimerequests::findOrFail($id);
-    $overtimeRequest->Status = $validated['status'];
-    $overtimeRequest->save();
-
-    return redirect()->route('overtimerequests.index')
-        ->with('success', 'Overtime request status updated successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Overtime request status updated successfully'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update overtime request status'
+        ], 500);
+    }
 }
 public function showLeaveRequests()
 {
@@ -80,4 +85,5 @@ public function showLeaveRequests()
 
     return view('employee.employeeleaverequest', compact('overtimeRequests', 'leaveRequests'));
 }
+
 }
