@@ -7,11 +7,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-<style>
-    .card {
-        margin: 15px;
-    }
-</style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .card {
+            margin: 15px;
+        }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #009688;
+        }
+    </style>
 </head>
 <body>
     <x-layout>
@@ -20,10 +26,12 @@
                 <h1>Dashboard</h1>
             </div>
             <div class="row m-5">
+                <!-- Total Employees Card -->
                 <div class="col-md-3">
                     <div class="card employee-card" style="width: 100%;">
                         <a href="/employee" class="text-decoration-none text-dark">
                             <div class="card-body text-center">
+                                <i class="bi bi-people card-icon" style="color: #009688"></i>
                                 <h5 class="card-title">Total Employees</h5>
                                 <hr>
                                 <p class="card-text display-4">{{$totalEmployees}}</p>
@@ -31,10 +39,13 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- Attendance Card -->
                 <div class="col-md-3">
                     <div class="card attendance-card" style="width: 100%;">
                         <a href="/attendance" class="text-decoration-none text-dark">
                             <div class="card-body text-center">
+                                <i class="bi bi-calendar-check card-icon" style="color: #009688"></i> <!-- Bootstrap Icon -->
                                 <h5 class="card-title">Attendance</h5>
                                 <hr>
                                 <p class="card-text display-4">{{$totalAttendance}} / {{ $totalEmployees }}</p>
@@ -42,25 +53,31 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- Pending Requests Card -->
                 <div class="col-md-3">
                     <div class="card requests-card" style="width: 100%;">
                         <div class="card-body text-center">
+                            <i class="bi bi-envelope card-icon" style="color: #009688"></i> <!-- Bootstrap Icon -->
                             <h5 class="card-title">Pending Requests</h5>
                             <hr>
                             <a href="/leaverequests" class="text-decoration-none text-dark">
-                                <p class="card-text display-6"><strong>Leave: {{ $pendingLeaveRequests }}</p></strong>
+                                <p class="card-text display-6"><strong>Leave: {{ $pendingLeaveRequests }}</strong></p>
                             </a>
                             <br>
                             <a href="/overtimerequests" class="text-decoration-none text-dark">
-                                <p class="card-text display-6"><strong>Overtime:{{ $pendingOvertimeRequests }}</p></strong>
+                                <p class="card-text display-6"><strong>Overtime: {{ $pendingOvertimeRequests }}</strong></p>
                             </a>
                         </div>
                     </div>
                 </div>
+
+                <!-- Days Until Next Payroll Card -->
                 <div class="col-md-3">
                     <div class="card payroll-card" style="width: 100%;">
                         <a href="/payroll" class="text-decoration-none text-dark">
                             <div class="card-body text-center">
+                                <i class="bi bi-cash-coin card-icon" style="color: #009688"></i> <!-- Bootstrap Icon -->
                                 <h5 class="card-title">Days Until Next Payroll</h5>
                                 <hr>
                                 <p class="card-text display-4">{{ $daysUntilNextPayroll }}</p>

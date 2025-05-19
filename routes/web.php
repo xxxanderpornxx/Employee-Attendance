@@ -15,6 +15,7 @@ use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\OvertimeRequestController;
 use App\Http\Controllers\PayrollController;
 
+
 Route::get('/', function () {
     return redirect('/login');
 });
@@ -104,10 +105,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('main.dash
    ->name('overtimerequests.index');
     Route::post('/overtimerequests/{id}/status', [OvertimeRequestController::class, 'updateStatus'])
    ->name('overtimerequests.status.update');
-
-
-
-
 
 
     // payroll routes

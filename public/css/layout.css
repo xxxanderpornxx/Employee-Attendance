@@ -1,22 +1,99 @@
+:root {
+    --primary-color: #009688;
+    --primary-dark: #00796b;
+    --primary-light: #b2dfdb;
+    --accent-color: #e0f2f1;
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --divider-color: #bdbdbd;
+    --error-color: #ff5252;
+    --success-color: #4caf50;
+}
+
+/* Global styles */
 body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #f5f5f5;
+    color: var(--text-primary);
 }
 
+/* Header improvements */
 header {
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Vertically center all child elements, including the <ul> */
-    justify-content: space-between; /* Space between logo/title and links */
-    padding: 0 20px; /* Add padding for spacing */
-    background-color: #34abc7; /* Navbar background color */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px; /* Increased padding */
+    background-color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 80px; /* Increased height */
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+/* Header title */
+header h1 {
+    font-size: 32px; /* Increased from 24px */
+    font-weight: 600;
+    text-align: center;
+    margin: 0 auto; /* Center horizontally */
 }
 
 /* Logo styling */
 .logo {
-    flex-shrink: 0; /* Prevent the logo from shrinking */
-    margin-right: 20px; /* Add spacing between the logo and the links */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+}
+
+.logo-text {
+    font-family: "Poppins", sans-serif;
+    font-size: 48px; /* Increased from 32px */
+    font-weight: 800; /* Increased weight */
+    color: white;
+    letter-spacing: 8px; /* Increased spacing */
+    text-transform: uppercase;
+    position: relative;
+    padding: 0 10px;
+    text-align: center;
+}
+
+.logo-accent {
+    color: var(--primary-light);
+    position: relative;
+    display: inline-block;
+    padding: 0 8px;
+    transition: transform 0.3s ease;
+}
+
+.logo-text:hover .logo-accent {
+    transform: scale(1.1);
+    color: var(--accent-color);
+}
+
+/* Add subtle animation on hover */
+.logo-text::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.logo-text:hover::after {
+    width: 100%;
 }
 
 .logo-img {
@@ -24,71 +101,98 @@ header {
     width: auto; /* Maintain aspect ratio */
 }
 
-/* Navbar links */
-ul {
-    display: flex; /* Align links horizontally */
-    align-items: center; /* Vertically center the links */
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    position: relative;
-    margin: 0;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 20px;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
-}
-
-li a:hover {
-    background-color: #007ec2; /* Hover color */
-    color: #e0f7fa; /* Slightly lighter text on hover */
-}
-
-.current {
-    background-color: #247a85; /* Active link color */
-    color: #ffffff;
-    border-bottom: 3px solid #e0f7fa; /* Highlight the active link */
-}
-
-/* Add a subtle separator between links */
-li:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    width: 1px;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.5); /* Subtle separator */
-}
-
-/* Main layout styles */
-.main-layout {
-    display: flex;
-    overflow: hidden; /* Prevent scrolling on the main layout */
-}
-
-/* Left column styles */
-.left-column {
-    width: 100px; /* Fixed width for the left column */
-    background-color: #d3d3d3; /* Gray background */
-    padding: 10px;
-    padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow on the right */
+/* Replace the existing navigation styles with these */
+.nav-menu-list {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.nav-menu-item {
+    position: relative;
+    margin: 0;
+    width: 100%;
+}
+
+.nav-menu-link {
+    display: flex;
     align-items: center;
-    justify-content: flex-start; /* Align items to the top initially */
-    height: 88vh; /* Set height to full viewport height */
+    color: white;
+    padding: 18px 28px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+    text-align: center;
+}
+
+.nav-menu-icon {
+    font-size: 24px;
+    width: 32px;
+    margin-right: 16px;
+}
+
+.nav-menu-item:not(:last-child)::after {
+    display: none;
+}
+
+.nav-menu-link:hover {
+    background-color: var(--primary-dark);
+    border-left: 4px solid var(--primary-light);
+    padding-left: 28px;
+}
+
+.nav-menu-link-active {
+    background-color: var(--primary-dark);
+    border-left: 4px solid var(--accent-color);
+    padding-left: 28px;
+}
+
+/* Enhanced sidebar */
+.left-column {
+    position: fixed;
+    top: 80px; /* Adjusted for increased header height */
+    left: 0;
+    width: 200px;
+    height: calc(100vh - 80px); /* Adjusted for increased header height */
+    background-color: #ffffff;
+    padding: 24px 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+    transition: all 0.3s ease;
+}
+
+/* Improved sidebar navigation */
+.left-column li a {
+    display: flex;
+    align-items: center;
+    padding: 16px 24px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.left-column li a:hover,
+.left-column li a.active {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border-left: 4px solid var(--primary-color);
+}
+
+.left-column li a i {
+    margin-right: 12px;
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+    color: inherit;
 }
 
 /* User info styles */
@@ -112,17 +216,78 @@ li:not(:last-child)::after {
     background-color: #e60000;
 }
 
-/* Main content styles */
+/* Enhanced dropdown */
+.dropdown-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px; /* Increased from 36px */
+    cursor: pointer;
+    padding: 15px; /* Increased padding */
+    transition: all 0.3s ease;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 240px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1001;
+    animation: dropdownFade 0.3s ease;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Main content area */
 .main-content {
-    flex-grow: 1; /* Take up remaining space */
-    padding: 20px;
+    margin-left: 180px;
+    margin-top: 50px; /* Adjusted for increased header height */
+    padding: 24px;
+    flex-grow: 1;
+    background-color: #f5f5f5;
     overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
-.navlinks {
-    display: flex;
-    margin-top: 20px; /* Add spacing from the top */
+/* Card styling */
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
 }
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Button styles */
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     header {

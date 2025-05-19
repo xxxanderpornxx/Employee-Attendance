@@ -67,21 +67,21 @@
                                         <td>{{ $employee->id }}</td>
                                         <td>{{ $employee->FirstName . ' ' . ($employee->MiddleName ? substr($employee->MiddleName, 0, 1) . '.' : '') . ' ' . $employee->LastName }}</td>
                                         <td>{{ $employee->position && $employee->department ? $employee->department->DepartmentName : 'N/A' }} | {{ $employee->position ? $employee->position->PositionName : 'N/A' }}</td>
-<td>
-    @if ($employee->shifts && $employee->shifts->count() > 0)
-        @php
-            $uniqueShifts = $employee->shifts->unique(function($shift) {
-                return $shift->StartTime . '-' . $shift->EndTime;
-            });
-        @endphp
-        @foreach ($uniqueShifts as $shift)
-            <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->StartTime)->format('h:i A') }} -
-                 {{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->EndTime)->format('h:i A') }}</div>
-        @endforeach
-    @else
-        N/A
-    @endif
-</td>
+                                                <td>
+                                                    @if ($employee->shifts && $employee->shifts->count() > 0)
+                                                        @php
+                                                            $uniqueShifts = $employee->shifts->unique(function($shift) {
+                                                                return $shift->StartTime . '-' . $shift->EndTime;
+                                                            });
+                                                        @endphp
+                                                        @foreach ($uniqueShifts as $shift)
+                                                            <div>{{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->StartTime)->format('h:i A') }} -
+                                                                {{ \Carbon\Carbon::createFromFormat('H:i:s', $shift->EndTime)->format('h:i A') }}</div>
+                                                        @endforeach
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
                                         <td>{{ $employee->Sex ?? 'N/A' }}</td>
                                         <td>{{ $employee->DateOfBirth ? (int) \Carbon\Carbon::createFromFormat('Y-m-d', $employee->DateOfBirth)->diffInYears(now()) : 'N/A' }}</td>
                                         <td>{{ $employee->Address }}</td>

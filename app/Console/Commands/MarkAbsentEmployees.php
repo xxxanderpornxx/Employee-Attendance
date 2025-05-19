@@ -32,5 +32,6 @@ class MarkAbsentEmployees extends Command
         $this->error('Failed to mark absent employees: ' . $e->getMessage());
         return self::FAILURE;
     }
+    //php artisan attendance:mark-absent
 }
 }

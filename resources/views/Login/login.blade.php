@@ -112,10 +112,9 @@
             </div>
 
             <button type="submit">Log In</button>
-
+            <a href="{{ route('register') }}" class="register-link">Register</a>
         </form>
 
-        <!-- Register Link -->
-        <a href="/register" class="register-link">Create an Account</a>
     </div>
+
 </x-loginlayout>

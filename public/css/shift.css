@@ -12,7 +12,7 @@
 }
 
 .addshiftbutton {
-    background-color: #34abc7;
+    background-color: #009688; /* Teal color */
     color: white;
     border: none;
     border-radius: 4px;
@@ -23,6 +23,6 @@
 }
 
 .addshiftbutton:hover {
-    background-color: #2a94a3;
+    background-color: #00796b;
     color: #e0f7fa;
 }

@@ -130,18 +130,20 @@ class PayrollController extends Controller
                 // Calculate overtime hours for the day
                 $checkOut = $dailyAttendances->where('Type', 'Check-out')->last();
                 if ($checkOut) {
-                    $scheduledShiftEnd = $employee->schedules()
+                    $schedule = $employee->schedules()
                         ->where('DayOfWeek', Carbon::parse($date)->format('l'))
                         ->with('shift')
-                        ->first()
-                        ->shift
-                        ->EndTime;
+                        ->first();
 
-                    $shiftEnd = Carbon::parse($date . ' ' . $scheduledShiftEnd);
-                    $actualCheckOut = Carbon::parse($checkOut->DateTime);
+                    // Add null check
+                    if ($schedule && $schedule->shift) {
+                        $scheduledShiftEnd = $schedule->shift->EndTime;
+                        $shiftEnd = Carbon::parse($date . ' ' . $scheduledShiftEnd);
+                        $actualCheckOut = Carbon::parse($checkOut->DateTime);
 
-                    if ($actualCheckOut->greaterThan($shiftEnd)) {
-                        $overtimeHours += $shiftEnd->diffInHours($actualCheckOut);
+                        if ($actualCheckOut->greaterThan($shiftEnd)) {
+                            $overtimeHours += $shiftEnd->diffInHours($actualCheckOut);
+                        }
                     }
                 }
             }

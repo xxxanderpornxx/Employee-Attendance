@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 </head>
 <body>
@@ -17,23 +17,43 @@
             <h2>Overtime Requests</h2>
             <div class="card">
                 <!-- Tab Navigation -->
-                <ul class="nav nav-tabs m-t" id="overtimeRequestTabs" role="tablist">
+            <div class="card-header p-0">
+                <ul class="nav nav-tabs" id="overtimeRequestTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
-                            Pending <span class="badge bg-warning">{{ $overtimeRequests->where('Status', 'Pending')->count() }}</span>
+                        <button class="nav-link active align-items-center justify-content-center"
+                                id="pending-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#pending"
+                                type="button"
+                                role="tab">
+                            <span>Pending</span>
+                            <span class="badge bg-warning">{{ $overtimeRequests->where('Status', 'Pending')->count() }}</span>
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab">
-                            Approved <span class="badge bg-success">{{ $overtimeRequests->where('Status', 'Approved')->count() }}</span>
+                        <button class="nav-link align-items-center justify-content-center"
+                                id="approved-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#approved"
+                                type="button"
+                                role="tab">
+                            <span>Approved</span>
+                            <span class="badge bg-success">{{ $overtimeRequests->where('Status', 'Approved')->count() }}</span>
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="Rejected-tab" data-bs-toggle="tab" data-bs-target="#Rejected" type="button" role="tab">
-                            Rejected <span class="badge bg-danger">{{ $overtimeRequests->where('Status', 'Rejected')->count() }}</span>
+                        <button class="nav-link align-items-center justify-content-center"
+                                id="Rejected-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#Rejected"
+                                type="button"
+                                role="tab">
+                            <span>Rejected</span>
+                            <span class="badge bg-danger">{{ $overtimeRequests->where('Status', 'Rejected')->count() }}</span>
                         </button>
                     </li>
                 </ul>
+            </div>
 
                 <!-- Tab Content -->
                 <div class="tab-content" id="overtimeRequestTabContent">
@@ -43,11 +63,11 @@
                             <table class="table table-striped table-bordered" id="pendingTable">
                                 <colgroup>
                                     <col style="width:1% ;">
-                                    <col style="width: 20% ;">
                                     <col style="width:20% ;">
                                     <col style="width:20% ;">
                                     <col style="width:20% ;">
-                                    <col style="width:15% ;">
+                                    <col style="width:20% ;">
+                                    <col style="width: 11% ;">
                                     </colgroup>
                                 <thead>
                                     <tr class="table-primary">
@@ -70,14 +90,14 @@
                                             <td>
                                                 <button onclick="updateOvertimeStatus({{ $request->id }}, 'Approved', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
                                                         class="btn btn-success btn-sm">
-                                                    Approve
+                                                    <i class="fas fa-check"></i>
                                                 </button>
                                                 <button onclick="updateOvertimeStatus({{ $request->id }}, 'Rejected', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
                                                         class="btn btn-danger btn-sm">
-                                                    Reject
+                                                    <i class="fas fa-times"></i>
                                                 </button>
                                             </td>
-                                                                                    </tr>
+                                        </tr>
                                     @empty
                                         <tr>
                                             <td colspan="6" class="text-center">No pending requests</td>

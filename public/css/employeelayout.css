@@ -1,182 +1,261 @@
+/* Add CSS Variables for consistent colors */
+:root {
+    --primary-color: #009688;
+    --primary-dark: #00796b;
+    --primary-light: #b2dfdb;
+    --accent-color: #e0f2f1;
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --divider-color: #bdbdbd;
+    --error-color: #ff5252;
+    --success-color: #4caf50;
+}
+
 /* General Styles */
 body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    font-family: Arial, sans-serif;
+    font-family: "Poppins", sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
+    background-color: #f5f5f5;
+    color: var(--text-primary);
 }
 
 /* Header Styles */
 header {
-    position: fixed; /* Fix the header at the top */
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000; /* Ensure header stays above other content */
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    background-color: #34abc7;
+    background-color: var(--primary-color);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     color: white;
-    height: 80px; /* Fixed height for header */
-}
-
-header h1 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: bold;
+    height: 80px;
 }
 
 /* Logo styling */
 .logo {
-    flex-shrink: 0; /* Prevent the logo from shrinking */
-    margin-right: 20px; /* Add spacing between the logo and the links */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+}
+
+.logo-text {
+    font-family: "Poppins", sans-serif;
+    font-size: 48px; /* Increased from 32px */
+    font-weight: 800; /* Increased weight */
+    color: white;
+    letter-spacing: 8px; /* Increased spacing */
+    text-transform: uppercase;
+    position: relative;
+    padding: 0 10px;
+    text-align: center;
+}
+
+.logo-accent {
+    color: var(--primary-light);
+    position: relative;
+    display: inline-block;
+    padding: 0 8px;
+    transition: transform 0.3s ease;
+}
+
+.logo-text:hover .logo-accent {
+    transform: scale(1.1);
+    color: var(--accent-color);
+}
+
+/* Add subtle animation on hover */
+.logo-text::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.logo-text:hover::after {
+    width: 100%;
 }
 
 .logo-img {
     height: 75px; /* Set the height of the logo */
     width: auto; /* Maintain aspect ratio */
 }
-
-/* Navigation Styles */
-nav ul {
-    display: flex; /* Align links horizontally */
-    align-items: center; /* Vertically center the links */
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    margin-left: auto; /* Push the links to the right */
+/* User Dropdown Styles */
+.header-right {
+    display: flex;
+    align-items: center;
 }
 
-nav ul li {
+.user-dropdown {
     position: relative;
-    margin: 0;
 }
 
-nav ul li a {
-    display: block;
+.dropdown-toggle {
+    background: none;
+    border: none;
     color: white;
-    text-align: center;
-    padding: 14px 20px;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
 }
 
-nav ul li a:hover {
-    background-color: #2a94a3; /* Hover color */
-    color: #e0f7fa; /* Slightly lighter text on hover */
-}
-
-.current {
-    background-color: #247a85; /* Active link color */
-    color: #ffffff;
-    border-bottom: 3px solid #e0f7fa; /* Highlight the active link */
-}
-
-/* Add a subtle separator between links */
-nav ul li:not(:last-child)::after {
-    content: "";
+.dropdown-menu {
+    display: none;
     position: absolute;
-    top: 50%;
     right: 0;
-    transform: translateY(-50%);
-    width: 1px;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.5); /* Subtle separator */
+    top: 100%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    min-width: 200px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.user-info {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+.logout-button {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #ff1a1a;
 }
 
 /* Main Layout Styles */
 .main-layout {
     display: flex;
-    margin-top: 80px; /* Add margin equal to header height */
-    min-height: calc(
-        100vh - 80px
-    ); /* Subtract header height from viewport height */
+    margin-top: 80px;
+    min-height: calc(100vh - 80px);
 }
 
-/* Left Column Styles */
+/* Left Column/Sidebar Styles */
 .left-column {
-    position: fixed; /* Fix the sidebar */
-    top: 80px; /* Position below fixed header */
+    position: fixed;
+    top: 80px;
     left: 0;
     width: 200px;
-    background-color: #d3d3d3;
-    padding: 10px;
-    padding-top: 20px;
+    background-color: white;
+    padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+.navlinks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navlinks li {
+    margin-bottom: 10px;
+}
+
+.navlinks a {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    height: calc(100vh - 80px); /* Subtract header height */
-    overflow-y: auto; /* Allow scrolling if content is too long */
+    padding: 12px 15px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s;
 }
 
-/* User Info Styles */
-.user-info {
-    text-align: center;
-    margin-top: auto; /* Push the content to the bottom */
+.navlinks a i {
+    margin-right: 10px;
+    width: 20px;
 }
 
-.logout-button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #ff4d4d;
+.navlinks a:hover {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.navlinks a.active {
+    background-color: var(--primary-dark);
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.logout-button:hover {
-    background-color: #e60000;
+    border-left: 4px solid var(--accent-color);
 }
 
 /* Main Content Styles */
 .main-content {
-    margin-left: 200px; /* Match sidebar width */
+    margin-left: 200px;
     flex-grow: 1;
     padding: 20px;
-    overflow-y: auto;
-    background-color: white;
-    min-height: calc(100vh - 80px); /* Subtract header height */
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Update button styles */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-danger {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    header {
-        position: relative; /* Reset position for mobile */
-        height: auto;
-    }
-
-    nav ul {
-        flex-direction: column; /* Stack items vertically on smaller screens */
-        margin-left: 0; /* Reset margin for smaller screens */
-    }
-
-    nav ul li a {
-        padding: 12px 16px;
-        font-size: 14px;
-    }
-
-    .main-layout {
-        margin-top: 0;
-        flex-direction: column;
-    }
-
     .left-column {
-        position: relative; /* Reset position for mobile */
-        width: 100%;
-        height: auto;
-        top: 0;
+        display: none;
     }
 
     .main-content {

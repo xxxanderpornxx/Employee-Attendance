@@ -1,5 +1,5 @@
 .addemployeebutton {
-    background-color: #34abc7; /* Set the button color */
+    background-color: #009688; /* Set the button color */
     color: white; /* Set the text color */
     border: none; /* Remove the border */
     border-radius: 4px; /* Add rounded corners */
@@ -10,7 +10,7 @@
 }
 
 .addemployeebutton:hover {
-    background-color: #2a94a3;
+    background-color: #00796b;
     color: #e0f7fa;
 }
 
@@ -25,4 +25,21 @@
     top: 0;
     background-color: #f8f9fa; /* Match the table header background color */
     z-index: 2;
+}
+.modal-backdrop.show:nth-child(n + 2) {
+    display: none;
+}
+
+.modal {
+    background: rgba(255, 255, 255, 0);
+}
+
+/* Modal animation */
+.modal.fade .modal-dialog {
+    transform: translate(0, -50px);
+    transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: none;
 }

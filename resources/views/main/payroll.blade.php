@@ -77,7 +77,7 @@
             </colgroup>
             <thead>
                 <tr class="table-primary">
-                <th>Employee ID</th>
+                <th>Emp ID</th>
                 <th>Employee Name</th>
                 <th>Period Start</th>
                 <th>Period End</th>

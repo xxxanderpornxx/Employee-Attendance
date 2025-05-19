@@ -1,6 +1,6 @@
 /* Custom styles for the Add Position button */
 .addbutton {
-    background-color: #34abc7; /* Set the button color */
+    background-color: #009688; /* Set the button color */
     color: white; /* Set the text color */
     border: none; /* Remove the border */
     border-radius: 4px; /* Add rounded corners */
@@ -11,7 +11,7 @@
 }
 
 .addbutton:hover {
-    background-color: #2a94a3;
+    background-color: #00796b;
     color: #e0f7fa;
 }
 

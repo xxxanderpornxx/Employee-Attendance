@@ -35,10 +35,10 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">Request History</h3>
                     <div>
-                        <button type="button" class="btn btn-info me-2 text-white" data-bs-toggle="modal" data-bs-target="#leaveModal">
+                        <button type="button" class="btn me-2 text-white" style="background-color: #009688;" data-bs-toggle="modal" data-bs-target="#leaveModal">
                             <i class="bi bi-plus-circle"></i> New Leave Request
                         </button>
-                        <button type="button" class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#overtimeModal">
+                        <button type="button" class="btn text-white" style="background-color: #009688;" data-bs-toggle="modal" data-bs-target="#overtimeModal">
                             <i class="bi bi-plus-circle"></i> New Overtime Request
                         </button>
                     </div>

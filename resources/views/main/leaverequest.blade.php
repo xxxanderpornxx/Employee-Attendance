@@ -3,194 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leave Request </title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- DataTables CSS -->
+    <title>Leave Request</title>
+    <!-- Existing CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 
+
+    <style>
+
+
+
+
+
+    </style>
 </head>
 <body>
     <x-layout>
         <div class="container mt-5">
             <h2>Leave Requests</h2>
-            <div class="card ">
-            <!-- Tab Navigation -->
-            <ul class="nav nav-tabs m-t" id="leaveRequestTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
-                        Pending <span class="badge bg-warning">{{ $leaveRequests->where('Status', 'Pending')->count() }}</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab">
-                        Approved <span class="badge bg-success">{{ $leaveRequests->where('Status', 'Approved')->count() }}</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="denied-tab" data-bs-toggle="tab" data-bs-target="#denied" type="button" role="tab">
-                        Rejected <span class="badge bg-danger">{{ $leaveRequests->where('Status', 'Denied')->count() }}</span>
-                    </button>
-                </li>
-            </ul>
-
-            <!-- Tab Content -->
-            <div class="tab-content" id="leaveRequestTabContent">
-                <!-- Pending Requests Tab -->
-                <div class="tab-pane fade show active" id="pending" role="tabpanel">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered" id="pendingTable">
-                            <colgroup>
-                                <col style="width:1% ;">
-                                <col style="width: 15% ;">
-                                <col style="width:10% ;">
-                                <col style="width:10% ;">
-                                <col style="width:10% ;">
-                                <col style="width:25% ;">
-                                <col style="width: 12% ;">
-                                </colgroup>
-                            <thead>
-                                <tr class="table-primary">
-                                    <th>ID</th>
-                                    <th>Employee</th>
-                                    <th>Leave Type</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Reason</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($leaveRequests->where('Status', 'Pending') as $request)
-                                    <tr>
-                                        <td>{{ $request->id }}</td>
-                                        <td>{{ $request->employee->FirstName }} {{ $request->employee->LastName }}</td>
-                                        <td>{{ $request->LeaveType }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($request->StartDate)->format('M d, Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($request->EndDate)->format('M d, Y') }}</td>
-                                        <td>{{ $request->Reason }}</td>
-                                        <td>
-                                            <button onclick="updateStatus({{ $request->id }}, 'Approved', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
-                                                    class="btn btn-success btn-sm">
-                                                Approve
-                                            </button>
-                                            <button onclick="updateStatus({{ $request->id }}, 'Denied', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
-                                                    class="btn btn-danger btn-sm">
-                                                Reject
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No pending requests</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="card">
+                <div class="card-header p-0">
+                    <ul class="nav nav-tabs" id="leaveRequestTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active  align-items-center justify-content-center"
+                                    id="pending-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#pending"
+                                    type="button"
+                                    role="tab">
+                                <span>Pending</span>
+                                <span class="badge bg-warning">{{ $leaveRequests->where('Status', 'Pending')->count() }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link align-items-center justify-content-center"
+                                    id="approved-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#approved"
+                                    type="button"
+                                    role="tab">
+                                <span>Approved</span>
+                                <span class="badge bg-success">{{ $leaveRequests->where('Status', 'Approved')->count() }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link align-items-center justify-content-center"
+                                    id="denied-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#denied"
+                                    type="button"
+                                    role="tab">
+                                <span>Rejected</span>
+                                <span class="badge bg-danger">{{ $leaveRequests->where('Status', 'Denied')->count() }}</span>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-
-                <!-- Approved Requests Tab -->
-                <div class="tab-pane fade" id="approved" role="tabpanel">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered" id="approvedTable">
-                            <colgroup>
-                                <col style="width:1% ;">
-                                <col style="width: 15% ;">
-                                <col style="width:10% ;">
-                                <col style="width:10% ;">
-                                <col style="width:10% ;">
-                                <col style="width:25% ;">
-                                <col style="width: 12% ;">
+                <!-- Tab Content -->
+                <div class="tab-content" id="leaveRequestTabContent">
+                    <!-- Pending Requests Tab -->
+                    <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered" id="pendingTable">
+                                <colgroup>
+                                    <col style="width:1% ;">
+                                    <col style="width: 15% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:25% ;">
+                                    <col style="width:10% ;">
                                 </colgroup>
-                            <thead>
-                                <tr class="table-primary">
-                                    <th>ID</th>
-                                    <th>Employee</th>
-                                    <th>Leave Type</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Reason</th>
-                                    <th>Rejected Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($leaveRequests->where('Status', 'Approved') as $request)
-                                    <tr>
-                                        <td>{{ $request->id }}</td>
-                                        <td>{{ $request->employee->FirstName }} {{ $request->employee->LastName }}</td>
-                                        <td>{{ $request->LeaveType }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($request->StartDate)->format('M d, Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($request->EndDate)->format('M d, Y') }}</td>
-                                        <td>{{ $request->Reason }}</td>
-                                        <td>{{ $request->updated_at->format('M d, Y') }}</td>
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th>ID</th>
+                                        <th>Employee</th>
+                                        <th>Leave Type</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Reason</th>
+                                        <th>Actions</th>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No approved requests</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @forelse ($leaveRequests->where('Status', 'Pending') as $request)
+                                        <tr>
+                                            <td>{{ $request->id }}</td>
+                                            <td>{{ $request->employee->FirstName }} {{ $request->employee->LastName }}</td>
+                                            <td>{{ $request->LeaveType }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($request->StartDate)->format('M d, Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($request->EndDate)->format('M d, Y') }}</td>
+                                            <td>{{ $request->Reason }}</td>
+                                            <td>
+                                                <button onclick="updateStatus({{ $request->id }}, 'Approved', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
+                                                        class="btn btn-success btn-sm">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button onclick="updateStatus({{ $request->id }}, 'Denied', '{{ $request->employee->FirstName }} {{ $request->employee->LastName }}')"
+                                                        class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">No pending requests</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Denied Requests Tab -->
-                <div class="tab-pane fade" id="denied" role="tabpanel">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered" id="deniedTable">
-                            <colgroup>
-                                <col style="width:1% ;">
-                                <col style="width: 15% ;">
-                                <col style="width:10% ;">
-                                <col style="width:10% ;">
-                                <col style="width:10% ;">
-                                <col style="width:25% ;">
-                                <col style="width: 12% ;">
+                    <!-- Approved Requests Tab -->
+                    <div class="tab-pane fade" id="approved" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered" id="approvedTable">
+                                <colgroup>
+                                    <col style="width:1% ;">
+                                    <col style="width: 15% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:25% ;">
+                                    <col style="width: 12% ;">
                                 </colgroup>
-                            <thead>
-                                <tr class="table-primary">
-                                    <th>ID</th>
-                                    <th>Employee</th>
-                                    <th>Leave Type</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Reason</th>
-                                    <th>Rejected Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($leaveRequests->where('Status', 'Denied') as $request)
-                                    <tr>
-                                        <td>{{ $request->id }}</td>
-                                        <td>{{ $request->employee->FirstName }} {{ $request->employee->LastName }}</td>
-                                        <td>{{ $request->LeaveType }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($request->StartDate)->format('M d, Y') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($request->EndDate)->format('M d, Y') }}</td>
-                                        <td>{{ $request->Reason }}</td>
-                                        <td>{{ $request->updated_at->format('M d, Y') }}</td>
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th>ID</th>
+                                        <th>Employee</th>
+                                        <th>Leave Type</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Reason</th>
+                                        <th>Rejected Date</th>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">No Rejected requests</td>
+                                </thead>
+                                <tbody>
+                                    @forelse ($leaveRequests->where('Status', 'Approved') as $request)
+                                        <tr>
+                                            <td>{{ $request->id }}</td>
+                                            <td>{{ $request->employee->FirstName }} {{ $request->employee->LastName }}</td>
+                                            <td>{{ $request->LeaveType }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($request->StartDate)->format('M d, Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($request->EndDate)->format('M d, Y') }}</td>
+                                            <td>{{ $request->Reason }}</td>
+                                            <td>{{ $request->updated_at->format('M d, Y') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">No approved requests</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Denied Requests Tab -->
+                    <div class="tab-pane fade" id="denied" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered" id="deniedTable">
+                                <colgroup>
+                                    <col style="width:1% ;">
+                                    <col style="width: 15% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:10% ;">
+                                    <col style="width:25% ;">
+                                    <col style="width: 12% ;">
+                                </colgroup>
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th>ID</th>
+                                        <th>Employee</th>
+                                        <th>Leave Type</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Reason</th>
+                                        <th>Rejected Date</th>
                                     </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @forelse ($leaveRequests->where('Status', 'Denied') as $request)
+                                        <tr>
+                                            <td>{{ $request->id }}</td>
+                                            <td>{{ $request->employee->FirstName }} {{ $request->employee->LastName }}</td>
+                                            <td>{{ $request->LeaveType }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($request->StartDate)->format('M d, Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($request->EndDate)->format('M d, Y') }}</td>
+                                            <td>{{ $request->Reason }}</td>
+                                            <td>{{ $request->updated_at->format('M d, Y') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">No Rejected requests</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-     </div>
         <!-- Initialize DataTables for each table -->
         <script>
-            $(document).ready(function() {
-                $('#pendingTable, #approvedTable, #deniedTable').each(function() {
+          $(document).ready(function() {
+                const table= ('#pendingTable, #approvedTable, #RejectedTable').each(function() {
                     $(this).DataTable({
-                        order: [[0, 'desc']], // Sort by ID descending
+                        scrollY: '300px', // Set vertical scroll height
+                        scrollCollapse: true,
+                        paging: true,
+                        searching: true,
+                        ordering: true,
+                        info: true,
+                        lengthChange: true,
                         pageLength: 10,
-                        responsive: true
+                        order:[[0,'desc']],
+                        language: {
+            search: "Search:",
+            lengthMenu: "Display _MENU_ records per page",
+            zeroRecords: "No matching records found",
+            info: "Showing _START_ to _END_ of _TOTAL_ entries",
+            infoEmpty: "No entries available",
+            infoFiltered: "(filtered from _MAX_ total entries)"
+        },
+
                     });
                 });
             });
@@ -289,7 +333,7 @@ style.textContent = `
 document.head.appendChild(style);
 </script>
     </x-layout>
-    <!-- Bootstrap JS -->
+ <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

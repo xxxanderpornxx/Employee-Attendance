@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\empuser; // Use the empuser model
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -83,10 +85,21 @@ public function showLogin() {
     }
 
 
-    public function logout(Request $request) {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login');
-    }
+public function logout(Request $request)
+{
+    Auth::logout();
+
+    // Method 1: Using session driver methods
+    Session::flush();
+    Session::invalidate();
+    Session::regenerateToken();
+
+    // Method 2: Using Cookie facade
+    Cookie::queue(Cookie::forget('laravel_session'));
+
+    // Method 3: Using response with cookie
+    return redirect('/login')
+        ->withCookie(Cookie::forget('laravel_session'))
+        ->with('success', 'Logged out successfully');
+}
 }

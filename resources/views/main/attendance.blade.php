@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Attendance</title>
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-    <x-layout>
-        <header>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-        <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
         <style>
 .swal2-popup {
     font-size: 1.2rem;
@@ -45,14 +45,43 @@
     box-shadow: 0 0 15px rgba(255,0,0,0.2);
 }
 </style>
-    </header>
-    <div class="container mt-4">
-        <div class="row">
-            <h1 class="mb-4">Attendance</h1>
 
+</head>
+<body>
+    <x-layout>
+
+    <div class="container mt-4" >
+        <div class="row">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <h1 class="mb-0">Attendance</h1>
+                            <h3 id="currentTime" class="mb-0"></h3>
+                        </div>
+                    </div>
+                </div>
+
+            <script>
+            function updateTime() {
+                const now = new Date();
+                const options = {
+                    timeZone: 'Asia/Manila',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                };
+                document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', options);
+            }
+
+            setInterval(updateTime, 1000);
+            updateTime();
+            </script>
+            </div>
             <!-- Camera Card -->
             <div class="col-md-4">
-                <div class="card h-100">
+                <div class="card h-90   ">
                     <div class="card-header text-center">
                         QR Code Scanner
                     </div>
@@ -131,7 +160,13 @@
                                 zeroRecords: "No matching records found",
                                 info: "Showing _START_ to _END_ of _TOTAL_ entries",
                                 infoEmpty: "No entries available",
-                                infoFiltered: "(filtered from _MAX_ total entries)"
+                                infoFiltered: "(filtered from _MAX_ total entries)",
+                                paginate: {
+                                    first: "First",
+                                    last: "Last",
+                                    next: "Next",
+                                    previous: "Previous"
+                                }
                             }
                         });
 
